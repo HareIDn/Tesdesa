@@ -21,8 +21,8 @@
                         <!-- Left Side - Image and Logo -->
                         <div class="relative w-full md:w-1/2 bg-gradient-to-br from-[#4A7251]/90 to-[#387ca3]/90 text-white p-8 md:p-20 overflow-hidden">
                             <div class="h-full flex flex-col items-center justify-center">
-                                <div class="max-w-[120px] mb-6 relative z-10">
-                                    <img src="/images/logo.png" alt="Logo Desa" class="w-full h-auto drop-shadow-md">
+                                <div class="max-w-[80px] mb-6 relative z-10">
+                                    <img src="/images/logo2.png" alt="Logo Desa" class="w-full h-auto drop-shadow-md">
                                 </div>
                                 <h3 class="text-center text-2xl mb-3 drop-shadow-md">Website Desa</h3>
                                 <p class="text-center drop-shadow-md">Portal Informasi dan Layanan Masyarakat</p>
@@ -33,7 +33,7 @@
                         <div class="w-full md:w-1/2">
                             <div class="p-4 md:p-20">
                                 <div class="flex items-center gap-3 mb-6">
-                                    <img src="/images/logo.png" alt="Login Logo" class="w-8 h-8">
+                                    <img src="/images/logo2.png" alt="Login Logo" class="w-8 h-8">
                                     <h4 class="text-xl font-medium">Masuk</h4>
                                 </div>
                                 <form>
