@@ -95,17 +95,17 @@
                 <!-- Table Sections -->
                 <div id="table-pengajuan" class="table-section">
                     <!-- Table content for Pengajuan -->
-                    @include('table', ['title' => 'Daftar Surat Pengajuan'])
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Pengajuan'])
                 </div>
 
                 <div id="table-proses" class="table-section hidden">
                     <!-- Table content for Proses -->
-                    @include('table', ['title' => 'Daftar Surat Sedang Diproses'])
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Sedang Diproses'])
                 </div>
 
                 <div id="table-selesai" class="table-section hidden">
                     <!-- Table content for Selesai -->
-                    @include('table', ['title' => 'Daftar Surat Selesai Diproses'])
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Selesai Diproses'])
                 </div>
             </div>
         </div>
