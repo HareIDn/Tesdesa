@@ -14,3 +14,9 @@ Route::get('/skck', function () {
 Route::get('/super', function () {
     return view('admin.super.dashboard');
 });
+Route::get('/statistic', function () {
+    return view('admin.statistic');
+});
+Route::get('/edit', function () {
+    return view('admin.edit');
+});

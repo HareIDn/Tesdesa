@@ -20,10 +20,10 @@
                         <a href="#" class="text-gray-700 font-medium">Beranda</a>
                     </div>
                     <div class="p-4">
-                        <a href="#" class="text-gray-600">Statistik Layanan</a>
+                        <a href="/statistic" class="text-gray-600">Statistik Layanan</a>
                     </div>
                     <div class="p-4">
-                        <a href="#" class="text-gray-600">Edit Profil</a>
+                        <a href="/edit" class="text-gray-600">Edit Profil</a>
                     </div>
                 </div>
             </nav>
