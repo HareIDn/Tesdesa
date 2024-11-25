@@ -50,9 +50,9 @@
 
                 <!-- Deskripsi -->
                 <div class="mb-6">
-    <label for="description" class="block text-gray-700 font-medium">Deskripsi</label>
-    <textarea id="description" class="w-full border border-gray-400 rounded-lg shadow-sm mt-2 p-2 focus:ring focus:ring-green-300 focus:border-green-500" rows="4"></textarea>
-</div>
+                    <label for="description" class="block text-gray-700 font-medium">Deskripsi</label>
+                    <textarea id="description" class="w-full border border-gray-400 rounded-lg shadow-sm mt-2 p-2 focus:ring focus:ring-green-300 focus:border-green-500" rows="4"></textarea>
+                </div>
 
 
                 <!-- Simpan Button -->
