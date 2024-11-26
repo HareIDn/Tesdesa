@@ -9,7 +9,7 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 });
 Route::get('/skck', function () {
-    return view('skck');
+    return view('civil.form.skck');
 });
 Route::get('/super', function () {
     return view('admin.super.dashboard');
@@ -22,4 +22,7 @@ Route::get('/profile', function () {
 });
 Route::get('/activity', function () {
     return view('admin.super.activity');
+});
+Route::get('/civil', function () {
+    return view('civil.dashboard');
 });
