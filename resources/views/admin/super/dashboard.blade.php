@@ -1,4 +1,4 @@
-<!-- resources/views/admin/users.blade.php -->
+<!-- resources/views/admin/super.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,13 +17,31 @@
             <nav class="mt-6">
                 <div class="px-4">
                     <div class="bg-green-600 rounded-lg p-4 mb-4">
-                        <a href="#" class="text-white font-medium">Users</a>
+                        <a href="/super" class="text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Users
+                        </a>
                     </div>
                     <div class="p-4">
-                        <a href="#" class="text-white">Activities</a>
+                        <a href="/activity" class="text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Activities
+                        </a>
                     </div>
                 </div>
             </nav>
+            <div class="absolute bottom-4 left-4">
+                <button class="text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-green-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Keluar
+                </button>
+            </div>
         </div>
 
         <!-- Main Content -->

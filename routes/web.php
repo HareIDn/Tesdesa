@@ -17,6 +17,9 @@ Route::get('/super', function () {
 Route::get('/statistic', function () {
     return view('admin.statistic');
 });
-Route::get('/edit', function () {
-    return view('admin.edit');
+Route::get('/profile', function () {
+    return view('admin.profile');
+});
+Route::get('/activity', function () {
+    return view('admin.super.activity');
 });

@@ -23,7 +23,7 @@
                         <a href="/statistic" class="text-gray-600">Statistik Layanan</a>
                     </div>
                     <div class="p-4">
-                        <a href="/edit" class="text-gray-600">Edit Profil</a>
+                        <a href="/profile" class="text-gray-600">Edit Profil</a>
                     </div>
                 </div>
             </nav>

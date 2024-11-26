@@ -24,7 +24,7 @@
                         <a href="/statistics" class="text-gray-700 font-medium">Statistik Layanan</a>
                     </div>
                     <div class="p-4">
-                        <a href="/edit" class="text-gray-600">Edit Profil</a>
+                        <a href="/profile" class="text-gray-600">Edit Profil</a>
                     </div>
                 </div>
             </nav>
@@ -140,26 +140,23 @@
         // Staff Performance Chart
         const perfCtx = document.getElementById('performanceChart').getContext('2d');
         new Chart(perfCtx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'],
                 datasets: [{
                     label: 'Staff A',
                     data: [95, 88, 92, 85, 90],
-                    borderColor: '#166534',
-                    tension: 0.4
+                    backgroundColor: '#166534'
                 },
                 {
                     label: 'Staff B',
                     data: [80, 85, 83, 88, 85],
-                    borderColor: '#22c55e',
-                    tension: 0.4
+                    backgroundColor: '#22c55e'
                 },
                 {
                     label: 'Staff C',
                     data: [75, 78, 82, 80, 85],
-                    borderColor: '#86efac',
-                    tension: 0.4
+                    backgroundColor: '#86efac'
                 }]
             },
             options: {
