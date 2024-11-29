@@ -55,7 +55,7 @@
                                         </label>
                                     </div>
                                     <button type="button" 
-                                    onclick="window.location.href='{{ url('/admin') }}'"
+                                    onclick="window.location.href='{{ url('/civil') }}'"
                                     class="w-full py-2 px-4 bg-gradient-to-r from-[#68a4c4] to-[#387ca3] hover:from-[#387ca3] hover:to-[#68a4c4] text-white rounded-lg transition duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
                                     Masuk
                                 </button>

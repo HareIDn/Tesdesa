@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100">
     <!-- Header -->
-    <header class="bg-green-600 text-white">
+    <header class="bg-custom-green text-white">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center">
                 <a href="#" onclick="window.history.back()" class="text-white hover:text-gray-200">
@@ -16,7 +16,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </a>
-                <h1 class="text-xl font-semibold ml-4">E-Layanan</h1>
+                <h1 class="text-xl font-semibold ml-4">E-Layanan SKCK</h1>
             </div>
         </div>
     </header>
@@ -75,7 +75,7 @@
 
                     <!-- Submit Button -->
                     <div class="mt-8 flex justify-center">
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium shadow-sm hover:shadow-md transition-all">
+                        <button type="submit" class="bg-custom-green hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium shadow-sm hover:shadow-md transition-all">
                             Kirim
                         </button>
                     </div>

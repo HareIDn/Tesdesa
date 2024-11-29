@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Pengajuan Online Kelurahan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'custom-green': '#4A7251',
-                        'custom-green-light': '#558459', // Slightly lighter for hover states
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
@@ -36,13 +24,13 @@
                     </div>
                     
                     <div class="space-y-2 ml-2">
-                        <div class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
+                        <div onclick="window.location.href='{{ url('/skck') }}'" class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
                             Surat Keterangan Catatan Kepolisian
                         </div>
-                        <div class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
+                        <div onclick="window.location.href='{{ url('/domisili') }}'" class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
                             Surat Keterangan Domisili
                         </div>
-                        <div class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
+                        <div onclick="window.location.href='{{ url('/sktm') }}'" class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">
                             Surat Keterangan Tidak Mampu
                         </div>
                         <div class="hover:bg-custom-green-light p-2 rounded cursor-pointer transition-colors duration-200">

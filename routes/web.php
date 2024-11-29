@@ -26,3 +26,9 @@ Route::get('/activity', function () {
 Route::get('/civil', function () {
     return view('civil.dashboard');
 });
+Route::get('/domisili', function () {
+    return view('civil.form.domisili');
+});
+Route::get('/sktm', function () {
+    return view('civil.form.sktm');
+});
