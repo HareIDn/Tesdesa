@@ -9,9 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="bg-white w-64 shadow-lg hidden md:block">
+        <div class="hidden w-64 bg-white shadow-lg md:block">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-800">Beranda Admin</h1>
             </div>
@@ -21,15 +21,15 @@
                         <a href="/admin" class="text-gray-600">Beranda</a>
                     </div>
                     <div class="p-4">
-                        <a href="/statistics" class="text-gray-600">Statistik Layanan</a>
+                        <a href="/statistic" class="text-gray-600">Statistik Layanan</a>
                     </div>
-                    <div class="bg-green-100 rounded-lg p-4 mb-4">
-                        <a href="/profile" class="text-gray-700 font-medium">Edit Profil</a>
+                    <div class="p-4 mb-4 bg-green-100 rounded-lg">
+                        <a href="/profile" class="font-medium text-gray-700">Edit Profil</a>
                     </div>
                 </div>
             </nav>
             <div class="p-4 border-t">
-        <button onclick="window.location.href='/logout'" class="w-full bg-red-50 text-red-600 rounded-lg p-4 flex items-center justify-center hover:bg-red-100 transition-colors">
+        <button onclick="window.location.href='/logout'" class="flex items-center justify-center w-full p-4 text-red-600 transition-colors rounded-lg bg-red-50 hover:bg-red-100">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
             </svg>
@@ -41,7 +41,7 @@
         <!-- Main Content -->
         <div class="flex-1 overflow-x-hidden">
             <!-- Mobile Header -->
-            <div class="md:hidden bg-white p-4 shadow">
+            <div class="p-4 bg-white shadow md:hidden">
                 <button class="text-gray-600" id="mobile-menu-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -50,17 +50,17 @@
             </div>
 
             <div class="p-6">
-                <h2 class="text-2xl font-bold mb-6">Edit Profil Desa</h2>
+                <h2 class="mb-6 text-2xl font-bold">Edit Profil Desa</h2>
 
                 <form class="max-w-3xl">
                     <!-- Profile Image Section -->
-                    <div class="bg-white rounded-lg p-6 mb-6 shadow-sm">
+                    <div class="p-6 mb-6 bg-white rounded-lg shadow-sm">
                         <div class="flex flex-col items-center justify-center">
                             <div class="relative">
-                                <div class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-camera text-4xl text-gray-400"></i>
+                                <div class="flex items-center justify-center w-32 h-32 bg-gray-200 rounded-full">
+                                    <i class="text-4xl text-gray-400 fas fa-camera"></i>
                                 </div>
-                                <button type="button" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg">
+                                <button type="button" class="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
@@ -71,8 +71,8 @@
                     </div>
 
                     <!-- Description Section -->
-                    <div class="bg-white rounded-lg p-6 mb-6 shadow-sm">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <div class="p-6 mb-6 bg-white rounded-lg shadow-sm">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">
                             Deskripsi
                         </label>
                         <textarea
@@ -83,7 +83,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex justify-center">
-                        <button type="submit" class="bg-green-800 text-white px-8 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <button type="submit" class="px-8 py-2 text-white transition-colors bg-green-800 rounded-lg hover:bg-green-700">
                             Simpan
                         </button>
                     </div>

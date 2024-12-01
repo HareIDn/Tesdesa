@@ -30,5 +30,17 @@ Route::get('/domisili', function () {
     return view('civil.form.domisili');
 });
 Route::get('/sktm', function () {
-    return view('civil.form.sktm');
+    return view('civil.form.sktm.selfdata');
+});
+Route::get('/sktm1', function () {
+    return view('civil.form.sktm.familydata');
+});
+Route::get('/sktm2', function () {
+    return view('civil.form.sktm.usage');
+});
+Route::get('/usaha', function () {
+    return view('civil.form.usaha.selfdata');
+});
+Route::get('/usaha1', function () {
+    return view('civil.form.usaha.businessdata');
 });
