@@ -2,64 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\dokumen;
+use App\Models\Dokumen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DokumenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        // Validate the request
+        $request->validate([
+            'file_pdf' => 'required|file|mimes:pdf|max:10240', // Only allow PDF files up to 10 MB
+            'data_pendukung1' => 'nullable|string',
+            'data_pendukung2' => 'nullable|string',
+            'data_pendukung3' => 'nullable|string',
+            'data_pendukung4' => 'nullable|string',
+            'data_pendukung5' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(dokumen $dokumen)
-    {
-        //
-    }
+        // Store the PDF file in the storage/app/public/dokumens directory
+        $path = $request->file('file_pdf')->store('dokumens', 'public');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(dokumen $dokumen)
-    {
-        //
-    }
+        // Save to the database
+        Dokumen::create([
+            'file_pdf' => $path,
+            'data_pendukung1' => $request->data_pendukung1,
+            'data_pendukung2' => $request->data_pendukung2,
+            'data_pendukung3' => $request->data_pendukung3,
+            'data_pendukung4' => $request->data_pendukung4,
+            'data_pendukung5' => $request->data_pendukung5,
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, dokumen $dokumen)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(dokumen $dokumen)
-    {
-        //
+        return response()->json(['message' => 'Dokumen uploaded successfully!', 'path' => $path], 201);
     }
 }
