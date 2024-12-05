@@ -5,45 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beranda Admin</title>
+    <!-- Menyertakan file CSS dan JS yang diproses dengan Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <div class="hidden w-64 bg-white shadow-lg md:block">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-800">Beranda Admin</h1>
-            </div>
-            <nav class="mt-6">
-                <div class="px-4">
-                    <div class="p-4 mb-4 bg-green-100 rounded-lg">
-                        <a href="#" class="font-medium text-gray-700">Beranda</a>
-                    </div>
-                    <div class="p-4">
-                        <a href="/statistic" class="text-gray-600">Statistik Layanan</a>
-                    </div>
-                    <div class="p-4">
-                        <a href="/profile" class="text-gray-600">Edit Profil</a>
-                    </div>
-                </div>
-            </nav>
 
-            <div class="p-4 border-t">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="flex items-center justify-center w-full p-4 text-red-600 transition-colors rounded-lg bg-red-50 hover:bg-red-100">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        Keluar
-                    </button>
-                </form>
-            </div>
+            @include('components.sidebar-admin')
+
+
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 overflow-x-hidden">
-            <!-- Mobile Header -->
+            <!-- Mobile Header (Tombol Menu untuk perangkat mobile) -->
             <div class="p-4 bg-white shadow md:hidden">
                 <button class="text-gray-600" id="mobile-menu-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +31,7 @@
 
             <!-- Welcome Section -->
             <div class="p-6">
-                <h2 class="mb-6 text-2xl font-bold">Welcome Back, Admin!</h2>
+                <h2 class="mb-6 text-2xl font-bold">Selamat Datang Kembali</h2>
 
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
@@ -103,22 +80,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Table Sections -->
-                <div id="table-pengajuan" class="table-section">
-                    <!-- Table content for Pengajuan -->
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Pengajuan'])
-                </div>
-
-                <div id="table-proses" class="hidden table-section">
-                    <!-- Table content for Proses -->
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Sedang Diproses'])
-                </div>
-
-                <div id="table-selesai" class="hidden table-section">
-                    <!-- Table content for Selesai -->
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Selesai Diproses'])
-                </div>
-
                 {{-- <!-- Table Sections -->
                 <div id="table-pengajuan" class="table-section">
                     <!-- Table content for Pengajuan -->
@@ -152,12 +113,28 @@
                         </tr>
                     @endforeach
                 </div> --}}
+
+                <!-- Table Sections -->
+                <!-- Bagian tabel untuk Surat Pengajuan -->
+                <div id="table-pengajuan" class="table-section">
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Pengajuan'])
+                </div>
+
+                <!-- Bagian tabel untuk Surat Sedang Diproses -->
+                <div id="table-proses" class="hidden table-section">
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Sedang Diproses'])
+                </div>
+
+                <!-- Bagian tabel untuk Surat Selesai Diproses -->
+                <div id="table-selesai" class="hidden table-section">
+                    @include('admin.asset.table', ['title' => 'Daftar Surat Selesai Diproses'])
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle: Toggle menu untuk perangkat mobile
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const sidebar = document.querySelector('.min-h-screen > div:first-child');
 
@@ -170,36 +147,32 @@
             sidebar.classList.toggle('h-screen');
         });
 
-        // Table switching functionality
+        // Table switching functionality: Fungsi untuk berpindah antara tabel
         const cards = {
             'card-pengajuan': 'table-pengajuan',
             'card-proses': 'table-proses',
             'card-selesai': 'table-selesai'
         };
 
-        // Function to show selected table and hide others
+        // Fungsi untuk menampilkan tabel yang dipilih dan menyembunyikan yang lain
         function showTable(tableId) {
-            // Hide all tables
             document.querySelectorAll('.table-section').forEach(table => {
                 table.classList.add('hidden');
             });
-            // Show selected table
             document.getElementById(tableId).classList.remove('hidden');
         }
 
-        // Function to update card styles
+        // Fungsi untuk memperbarui gaya kartu yang dipilih
         function updateCardStyles(selectedCardId) {
-            // Reset all cards to default style
             Object.keys(cards).forEach(cardId => {
                 document.getElementById(cardId).classList.remove('bg-green-50');
                 document.getElementById(cardId).classList.add('bg-white');
             });
-            // Highlight selected card
             document.getElementById(selectedCardId).classList.remove('bg-white');
             document.getElementById(selectedCardId).classList.add('bg-green-50');
         }
 
-        // Add click listeners to cards
+        // Menambahkan event listener ke kartu
         Object.entries(cards).forEach(([cardId, tableId]) => {
             document.getElementById(cardId).addEventListener('click', () => {
                 showTable(tableId);

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EditProfileController;
+use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Civil\DashboardController as CivilDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,7 @@ Route::get('/dashboard', function () {
 
 //Autentikasi
 Route::middleware('auth')->group(function () {
+    //Dashboard untuk Admin
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 
     // Dashboard untuk Super Admin
@@ -36,21 +39,17 @@ Route::middleware('auth')->group(function () {
 Route::post('/dokumen', [DokumenController::class, 'store']);
 //Admin
 
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-});
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+Route::get('/profile', [EditProfileController::class, 'create'])->name('profile.create');
+Route::get('/statistic', [StatistikController::class, 'index'])->name('statistic.index');
 Route::get('/skck', function () {
     return view('civil.form.skck');
 });
 Route::get('/super', function () {
     return view('admin.super.dashboard');
 });
-Route::get('/statistic', function () {
-    return view('admin.statistic');
-});
-Route::get('/profile', function () {
-    return view('admin.profile');
-});
+
+
 Route::get('/activity', function () {
     return view('admin.super.activity');
 });

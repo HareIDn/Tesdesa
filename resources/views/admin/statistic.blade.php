@@ -9,39 +9,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="bg-white w-64 shadow-lg hidden md:block">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-800">Beranda Admin</h1>
-            </div>
-            <nav class="mt-6">
-                <div class="px-4">
-                    <div class="p-4">
-                        <a href="/admin" class="text-gray-600">Beranda</a>
-                    </div>
-                    <div class="bg-green-100 rounded-lg p-4 mb-4">
-                        <a href="/statistics" class="text-gray-700 font-medium">Statistik Layanan</a>
-                    </div>
-                    <div class="p-4">
-                        <a href="/profile" class="text-gray-600">Edit Profil</a>
-                    </div>
-                </div>
-            </nav>
-            <div class="p-4 border-t">
-        <button onclick="window.location.href='/logout'" class="w-full bg-red-50 text-red-600 rounded-lg p-4 flex items-center justify-center hover:bg-red-100 transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
-            Keluar
-        </button>
-    </div>
+        <div class="hidden w-64 bg-white shadow-lg md:block">
+            @include('components.sidebar-admin')
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 overflow-x-hidden">
             <!-- Mobile Header -->
-            <div class="md:hidden bg-white p-4 shadow">
+            <div class="p-4 bg-white shadow md:hidden">
                 <button class="text-gray-600" id="mobile-menu-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -51,43 +28,43 @@
 
             <div class="p-6">
                 <!-- Metric Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-green-50 rounded-xl p-4">
+                <div class="grid grid-cols-1 gap-4 mb-8 md:grid-cols-4">
+                    <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">TOTAL PENGAJUAN</h3>
-                        <p class="text-2xl font-bold mt-2">815</p>
+                        <p class="mt-2 text-2xl font-bold">815</p>
                     </div>
-                    <div class="bg-green-50 rounded-xl p-4">
+                    <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">RATA-RATA WAKTU</h3>
-                        <p class="text-2xl font-bold mt-2">2.5 Hari</p>
+                        <p class="mt-2 text-2xl font-bold">2.5 Hari</p>
                     </div>
-                    <div class="bg-green-50 rounded-xl p-4">
+                    <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">PALING BANYAK DIAJUKAN</h3>
-                        <p class="text-2xl font-bold mt-2">250</p>
+                        <p class="mt-2 text-2xl font-bold">250</p>
                     </div>
-                    <div class="bg-green-50 rounded-xl p-4">
+                    <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">KINERJA TERBAIK</h3>
-                        <p class="text-2xl font-bold mt-2">95%</p>
+                        <p class="mt-2 text-2xl font-bold">95%</p>
                     </div>
                 </div>
 
                 <!-- Tab Buttons -->
                 <div class="flex gap-4 mb-6">
-                    <button class="bg-green-800 text-white px-4 py-2 rounded-lg" id="statistikBtn">
+                    <button class="px-4 py-2 text-white bg-green-800 rounded-lg" id="statistikBtn">
                         Statistik Bulanan
                     </button>
-                    <button class="bg-white text-gray-700 px-4 py-2 rounded-lg" id="kinerjaBtn">
+                    <button class="px-4 py-2 text-gray-700 bg-white rounded-lg" id="kinerjaBtn">
                         Kinerja Staff
                     </button>
                 </div>
 
                 <!-- Chart Containers -->
-                <div id="statistikContent" class="bg-white rounded-xl p-6 shadow-sm">
-                    <h2 class="text-xl font-semibold mb-4">Trend Pengajuan Bulanan</h2>
+                <div id="statistikContent" class="p-6 bg-white shadow-sm rounded-xl">
+                    <h2 class="mb-4 text-xl font-semibold">Trend Pengajuan Bulanan</h2>
                     <canvas id="statisticsChart" height="300"></canvas>
                 </div>
 
-                <div id="kinerjaContent" class="bg-white rounded-xl p-6 shadow-sm hidden">
-                    <h2 class="text-xl font-semibold mb-4">Kinerja Staff</h2>
+                <div id="kinerjaContent" class="hidden p-6 bg-white shadow-sm rounded-xl">
+                    <h2 class="mb-4 text-xl font-semibold">Kinerja Staff</h2>
                     <canvas id="performanceChart" height="300"></canvas>
                 </div>
             </div>
@@ -108,27 +85,13 @@
             sidebar.classList.toggle('h-screen');
         });
 
-        // Monthly Statistics Chart
+        // Grafik Statistik Bulanan menggunakan data dari controller
         const statsCtx = document.getElementById('statisticsChart').getContext('2d');
         new Chart(statsCtx, {
             type: 'bar',
             data: {
-                labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'],
-                datasets: [{
-                    label: 'Jumlah Pengajuan',
-                    data: [50, 75, 100, 125, 150, 100],
-                    backgroundColor: '#166534'
-                },
-                {
-                    label: 'Rata-rata Waktu',
-                    data: [30, 45, 60, 75, 90, 60],
-                    backgroundColor: '#22c55e'
-                },
-                {
-                    label: 'Paling Banyak Diajukan',
-                    data: [20, 30, 40, 50, 60, 40],
-                    backgroundColor: '#86efac'
-                }]
+                labels: @json($monthlyData['labels']),
+                datasets: @json($monthlyData['datasets'])
             },
             options: {
                 responsive: true,
@@ -145,27 +108,13 @@
             }
         });
 
-        // Staff Performance Chart
+        // Grafik Kinerja Staff menggunakan data dari controller
         const perfCtx = document.getElementById('performanceChart').getContext('2d');
         new Chart(perfCtx, {
             type: 'bar',
             data: {
-                labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'],
-                datasets: [{
-                    label: 'Staff A',
-                    data: [95, 88, 92, 85, 90],
-                    backgroundColor: '#166534'
-                },
-                {
-                    label: 'Staff B',
-                    data: [80, 85, 83, 88, 85],
-                    backgroundColor: '#22c55e'
-                },
-                {
-                    label: 'Staff C',
-                    data: [75, 78, 82, 80, 85],
-                    backgroundColor: '#86efac'
-                }]
+                labels: @json($staffPerformanceData['labels']),
+                datasets: @json($staffPerformanceData['datasets'])
             },
             options: {
                 responsive: true,
