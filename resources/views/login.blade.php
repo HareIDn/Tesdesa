@@ -32,33 +32,48 @@
                         <!-- Right Side - Login Form -->
                         <div class="w-full md:w-1/2">
                             <div class="p-4 md:p-20">
+                                @if(session('error'))
+                                    <div class="mb-4 text-sm text-red-600">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <div class="flex items-center gap-3 mb-6">
                                     <img src="/images/logo2.png" alt="Login Logo" class="w-8 h-8">
                                     <h4 class="text-xl font-medium">Masuk</h4>
                                 </div>
-                                <form>
+                                <x-auth-session-status class="mb-4" :status="session('status')" />
+                                <form method="POST" action="{{ route('login') }}">
+                                    @csrf
                                     <div class="mb-4">
-                                        <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Nama Pengguna</label>
-                                        <input type="text" id="username" required
+                                        <label for="email" class="block mb-1 text-sm font-medium text-gray-700">Email</label>
+                                        <input type="email" id="email" name="email" :value="old('email')" required autofocus autocomplete="username"
                                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#68a4c4]/25 focus:border-[#68a4c4] transition duration-300">
+                                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                     </div>
                                     <div class="mb-4">
                                         <label for="password" class="block mb-1 text-sm font-medium text-gray-700">Kata Sandi</label>
-                                        <input type="password" id="password" required
+                                        <input type="password" id="password" name="password" required autocomplete="current-password"
                                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#68a4c4]/25 focus:border-[#68a4c4] transition duration-300">
+                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="flex items-center">
-                                            <input type="checkbox" id="remember"
+                                            <input type="checkbox" id="remember_me" name="remember"
                                                 class="rounded border-gray-300 text-[#68a4c4] focus:ring-[#68a4c4]">
                                             <span class="ml-2 text-sm text-gray-700">Ingat saya</span>
                                         </label>
                                     </div>
-                                    <button type="button"
-                                    onclick="window.location.href='{{ url('/super') }}'"
-                                    class="w-full py-2 px-4 bg-gradient-to-r from-[#68a4c4] to-[#387ca3] hover:from-[#387ca3] hover:to-[#68a4c4] text-white rounded-lg transition duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
-                                    Masuk
-                                </button>
+                                    <div class="flex items-center justify-end mt-4">
+                                        @if (Route::has('password.request'))
+                                            <a class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                                                Lupa kata sandi?
+                                            </a>
+                                        @endif
+                                        <button type="submit"
+                                            class="ms-3 w-full md:w-auto mt-4 md:mt-0 py-2 px-4 bg-gradient-to-r from-[#68a4c4] to-[#387ca3] hover:from-[#387ca3] hover:to-[#68a4c4] text-white rounded-lg transition duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+                                            Masuk
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

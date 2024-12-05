@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,33 @@ use App\Http\Controllers\DokumenController;
 Route::get('/', function () {
     return view('login');
 });
+
+Route::get('/dashboard', function () {
+    return view('admin.super.dashboard');
+})->middleware(['auth', 'verified'])->name('admin.super.dashboard');
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Dashboard untuk Super Admin
+    Route::get('/super', function () {
+        return view('admin.super.dashboard');
+    })->name('admin.super.dashboard');
+
+    // Dashboard untuk Warga
+    Route::get('/civil', function () {
+        return view('civil.dashboard');
+    })->name('civil.dashboard');
+});
+
+Route::post('/dokumen', [DokumenController::class, 'store']);
+
 Route::get('/admin', function () {
     return view('admin.dashboard');
 });
@@ -48,17 +76,5 @@ Route::get('/usaha', function () {
 Route::get('/usaha1', function () {
     return view('civil.form.usaha.businessdata');
 });
-
-
-Route::get('/dashboard', function () {
-    return view('admin.super.dashboard');
-})->middleware(['auth', 'verified'])->name('admin.super.dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-Route::post('/dokumen', [DokumenController::class, 'store']);
 require __DIR__.'/auth.php';
 
