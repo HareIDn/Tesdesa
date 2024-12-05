@@ -12,7 +12,30 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('civil.dashboard');
+        $serviceHistory = [
+            [
+                'service' => 'Surat Izin Usaha',
+                'status' => 'Selesai',
+                'date' => '2024-01-08',
+                'time' => '13:00',
+            ],
+            [
+                'service' => 'Surat Keterangan Domisili',
+                'status' => 'Proses',
+                'date' => '2024-02-15',
+                'time' => '10:30',
+            ],
+            [
+                'service' => 'Surat Keterangan Tidak Mampu',
+                'status' => 'Selesai',
+                'date' => '2024-03-22',
+                'time' => '09:00',
+            ],
+        ];
+
+        // Kirim data ke view
+        return view('civil.dashboard', compact('serviceHistory'));
+
     }
 
     /**

@@ -18,9 +18,19 @@ class SKTMController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function createSelfData()
     {
-        //
+        return view('civil.form.sktm.selfdata');
+    }
+
+    public function createFamilyData()
+    {
+        return view('civil.form.sktm.familydata');
+    }
+
+    public function createUsage()
+    {
+        return view('civil.form.sktm.usage');
     }
 
     /**

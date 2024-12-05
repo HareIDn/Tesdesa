@@ -4,6 +4,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EditProfileController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Civil\DashboardController as CivilDashboardController;
+use App\Http\Controllers\Civil\DomisiliController;
+use App\Http\Controllers\Civil\IjinUsahaController;
+use App\Http\Controllers\Civil\SKCKController;
+use App\Http\Controllers\Civil\SKTMController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,30 +51,16 @@ Route::get('/admin/statistic', [StatistikController::class, 'index'])->name('sta
 //Super Admin, nanti pake yang middleware
 Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin.index');
 Route::get('/super/activity', [ActivityController::class, 'index'])->name('activity.index');
-Route::get('/super/skck', function () {
-    return view('civil.form.skck');
-});
 
-Route::get('/civil', function () {
-    return view('civil.dashboard');
-});
-Route::get('/domisili', function () {
-    return view('civil.form.domisili');
-});
-Route::get('/sktm', function () {
-    return view('civil.form.sktm.selfdata');
-});
-Route::get('/sktm1', function () {
-    return view('civil.form.sktm.familydata');
-});
-Route::get('/sktm2', function () {
-    return view('civil.form.sktm.usage');
-});
-Route::get('/usaha', function () {
-    return view('civil.form.usaha.selfdata');
-});
-Route::get('/usaha1', function () {
-    return view('civil.form.usaha.businessdata');
-});
+//Civil, nanti pake yang middleware
+Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil.index');
+Route::get('/civil/skck', [SKCKController::class, 'store'])->name('skck.store');
+Route::get('/civil/domisili', [DomisiliController::class, 'store'])->name('domisili.store');
+Route::get('/civil/sktm', [SKTMController::class, 'createSelfData'])->name('sktm.selfdata');
+Route::get('/civil/sktm1', [SKTMController::class, 'createFamilyData'])->name('sktm.familydata');
+Route::get('/civil/sktm2', [SKTMController::class, 'createUsage'])->name('sktm.usage');
+Route::get('/civil/usaha', [IjinUsahaController::class, 'createSelfData'])->name('usaha.selfdata');
+Route::get('/civil/usaha1', [IjinUsahaController::class, 'createBusinessData'])->name('usaha.businessdata');
+
 require __DIR__.'/auth.php';
 

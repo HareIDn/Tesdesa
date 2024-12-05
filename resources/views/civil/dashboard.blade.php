@@ -1,3 +1,4 @@
+<!-- resources/views/dashboard/warga.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -24,16 +25,16 @@
                     </div>
 
                     <div class="ml-2 space-y-2">
-                        <div onclick="window.location.href='{{ url('/skck') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
+                        <div onclick="window.location.href='{{ route('skck.store') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
                             Surat Keterangan Catatan Kepolisian
                         </div>
-                        <div onclick="window.location.href='{{ url('/domisili') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
+                        <div onclick="window.location.href='{{ route('domisili.store') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
                             Surat Keterangan Domisili
                         </div>
-                        <div onclick="window.location.href='{{ url('/sktm') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
+                        <div onclick="window.location.href='{{ route('sktm.selfdata') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
                             Surat Keterangan Tidak Mampu
                         </div>
-                        <div onclick="window.location.href='{{ url('/usaha') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
+                        <div onclick="window.location.href='{{ route('usaha.selfdata') }}'" class="p-2 transition-colors duration-200 rounded cursor-pointer hover:bg-custom-green-light">
                             Surat Izin Usaha
                         </div>
                     </div>
@@ -56,7 +57,7 @@
                     <div class="w-2/3">
                         <h2 class="mb-4 text-xl font-semibold">Selamat datang di Portal Pengajuan Online Kelurahan</h2>
                         <p class="text-gray-600">
-                            Layanan ini dirancang untuk memudahkan warga dalam mengajukan berbagai jenis surat keterangan secara online tanpa perlu datang langsung ke kantor Kelurahan. Proses pengajuan dapat dilakukan 24 jam dan statu pengajuan dapat dipantau secara real-time. Semua pengajuan akan diproses sesuai dengan prosedur yang berlaku.
+                            Layanan ini dirancang untuk memudahkan warga dalam mengajukan berbagai jenis surat keterangan secara online tanpa perlu datang langsung ke kantor Kelurahan. Proses pengajuan dapat dilakukan 24 jam dan status pengajuan dapat dipantau secara real-time. Semua pengajuan akan diproses sesuai dengan prosedur yang berlaku.
                         </p>
                     </div>
                     <div class="w-1/3">
@@ -81,24 +82,14 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
+                            @foreach ($serviceHistory as $history)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4">Surat Izin Usaha</td>
-                                <td class="px-6 py-4">Selesai</td>
-                                <td class="px-6 py-4">2024-01-08</td>
-                                <td class="px-6 py-4">13:00</td>
+                                <td class="px-6 py-4">{{ $history['service'] }}</td>
+                                <td class="px-6 py-4">{{ $history['status'] }}</td>
+                                <td class="px-6 py-4">{{ $history['date'] }}</td>
+                                <td class="px-6 py-4">{{ $history['time'] }}</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4">Surat Izin Usaha</td>
-                                <td class="px-6 py-4">Selesai</td>
-                                <td class="px-6 py-4">2024-01-08</td>
-                                <td class="px-6 py-4">13:00</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4">Surat Izin Usaha</td>
-                                <td class="px-6 py-4">Selesai</td>
-                                <td class="px-6 py-4">2024-01-08</td>
-                                <td class="px-6 py-4">13:00</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

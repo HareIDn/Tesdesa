@@ -18,9 +18,14 @@ class IjinUsahaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function createSelfData()
     {
-        //
+        return view('civil.form.usaha.selfdata');
+    }
+
+    public function createBusinessData()
+    {
+        return view('civil.form.usaha.businessdata');
     }
 
     /**

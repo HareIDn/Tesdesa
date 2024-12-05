@@ -25,7 +25,7 @@
             <h2 class="mb-2 text-2xl font-semibold text-center">Surat Keterangan Ijin Usaha</h2>
             <p class="mb-8 text-center text-gray-600">Silahkan Lengkapi data berikut dengan benar</p>
 
-            <form action="{{ url('/usaha1') }}" class="space-y-6">
+            <form action="{{ route('usaha.businesdata') }}" method="POST" class="space-y-6">
                 <!-- Grid for two columns -->
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <!-- Left Column -->

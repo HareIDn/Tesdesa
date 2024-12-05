@@ -58,7 +58,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ url('/sktm2') }}">
+        <form action="{{ route('sktm.usage') }}" method="POST">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label for="nama_kepala_keluarga" class="block font-medium text-gray-700">Nama Kepala Keluarga</label>

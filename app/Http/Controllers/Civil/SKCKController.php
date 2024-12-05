@@ -20,7 +20,7 @@ class SKCKController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -28,7 +28,7 @@ class SKCKController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return view('civil.form.skck');
     }
 
     /**

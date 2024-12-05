@@ -21,6 +21,17 @@
         </div>
     </header>
 
+    <!-- Flash Message Notification -->
+    @if (session('success'))
+        <div class="fixed top-0 right-0 p-4 mt-4 mr-4 text-white bg-green-500 rounded-md">
+            <p>{{ session('success') }}</p>
+        </div>
+    @elseif (session('error'))
+        <div class="fixed top-0 right-0 p-4 mt-4 mr-4 text-white bg-red-500 rounded-md">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
     <!-- Main Content -->
     <div class="container px-4 py-8 mx-auto">
         <div class="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
@@ -59,6 +70,7 @@
 
             <!-- Form Section -->
             <form action="#" method="POST" class="space-y-6">
+                @csrf
                 <div class="mb-6">
                     <label class="block mb-2 font-medium text-gray-700">Tujuan Pengajuan SKTM</label>
                     <select class="w-full border border-gray-300 rounded-md shadow-sm">
@@ -110,5 +122,14 @@
             </form>
         </div>
     </div>
+    <script>
+        // Jika ada notifikasi sukses, maka akan menghilang setelah 5 detik
+        setTimeout(function () {
+            const notification = document.querySelector('.fixed');
+            if (notification) {
+                notification.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 </body>
 </html>

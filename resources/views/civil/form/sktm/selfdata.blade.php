@@ -59,7 +59,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ url('/sktm1') }}">
+        <form action="{{ route('sktm.familydata') }}" method="POST">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label for="nama" class="block font-medium text-gray-700">Nama Lengkap</label>

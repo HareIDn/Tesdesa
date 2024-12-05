@@ -19,13 +19,25 @@
         </div>
     </header>
 
+    <!-- Flash Message Notification -->
+    @if (session('success'))
+        <div class="fixed top-0 right-0 p-4 mt-4 mr-4 text-white bg-green-500 rounded-md">
+            <p>{{ session('success') }}</p>
+        </div>
+    @elseif (session('error'))
+        <div class="fixed top-0 right-0 p-4 mt-4 mr-4 text-white bg-red-500 rounded-md">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
     <!-- Main Content -->
     <main class="container px-4 py-8 mx-auto">
         <div class="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow">
             <h2 class="mb-2 text-2xl font-semibold text-center">SURAT IZIN USAHA</h2>
             <p class="mb-8 text-center text-gray-600">Silahkan Lengkapi data berikut dengan benar</p>
 
-            <form class="space-y-6">
+            <form method="POST" class="space-y-6">
+                @csrf
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Nama Usaha</label>
@@ -70,5 +82,14 @@
             </form>
         </div>
     </main>
+    <script>
+        // Jika ada notifikasi sukses, maka akan menghilang setelah 5 detik
+        setTimeout(function () {
+            const notification = document.querySelector('.fixed');
+            if (notification) {
+                notification.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 </body>
 </html>
