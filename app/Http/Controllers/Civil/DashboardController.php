@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Super;
+namespace App\Http\Controllers\Civil;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.super.dashboard');
+        return view('civil.dashboard');
     }
 
     /**

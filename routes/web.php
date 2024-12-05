@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Civil\DashboardController as CivilDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\DokumenController;
-
-
+use App\Http\Controllers\Super\DashboardController as SuperDashboardController;
+//Login
 Route::get('/', function () {
     return view('login');
 });
@@ -21,21 +22,19 @@ Route::get('/dashboard', function () {
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
+//Autentikasi
 Route::middleware('auth')->group(function () {
-    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 
     // Dashboard untuk Super Admin
-    Route::get('/super', function () {
-        return view('admin.super.dashboard');
-    })->name('admin.super.dashboard');
+    Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin');
 
     // Dashboard untuk Warga
-    Route::get('/civil', function () {
-        return view('civil.dashboard');
-    })->name('civil.dashboard');
+    Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil');
 });
 
 Route::post('/dokumen', [DokumenController::class, 'store']);
+//Admin
 
 Route::get('/admin', function () {
     return view('admin.dashboard');
