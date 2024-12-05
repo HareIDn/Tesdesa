@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\Super\ActivityController;
 use App\Http\Controllers\Super\DashboardController as SuperDashboardController;
 //Login
 Route::get('/', function () {
@@ -27,32 +28,29 @@ Route::get('/dashboard', function () {
 //Autentikasi
 Route::middleware('auth')->group(function () {
     //Dashboard untuk Admin
-    Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
 
     // Dashboard untuk Super Admin
-    Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin');
+    Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin.index');
 
     // Dashboard untuk Warga
-    Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil');
+    Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil.index');
 });
 
 Route::post('/dokumen', [DokumenController::class, 'store']);
-//Admin
 
+//Admin, nanti pake yang middleware
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
-Route::get('/profile', [EditProfileController::class, 'create'])->name('profile.create');
-Route::get('/statistic', [StatistikController::class, 'index'])->name('statistic.index');
-Route::get('/skck', function () {
+Route::get('/admin/profile', [EditProfileController::class, 'create'])->name('profile.create');
+Route::get('/admin/statistic', [StatistikController::class, 'index'])->name('statistic.index');
+
+//Super Admin, nanti pake yang middleware
+Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin.index');
+Route::get('/super/activity', [ActivityController::class, 'index'])->name('activity.index');
+Route::get('/super/skck', function () {
     return view('civil.form.skck');
 });
-Route::get('/super', function () {
-    return view('admin.super.dashboard');
-});
 
-
-Route::get('/activity', function () {
-    return view('admin.super.activity');
-});
 Route::get('/civil', function () {
     return view('civil.dashboard');
 });

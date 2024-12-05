@@ -114,7 +114,7 @@
                     @endforeach
                 </div> --}}
 
-                <!-- Table Sections -->
+                <!-- Table Sections, pake yang atas kalau mau tes -->
                 <!-- Bagian tabel untuk Surat Pengajuan -->
                 <div id="table-pengajuan" class="table-section">
                     @include('admin.asset.table', ['title' => 'Daftar Surat Pengajuan'])

@@ -12,7 +12,21 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        //
+        $activities = [
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Biru Abadi', 'document' => 'Surat Izin Usaha', 'status' => 'Selesai', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
+            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30']
+        ];
+
+        // Mengirim data ke view
+        return view('admin.super.activity', compact('activities'));
     }
 
     /**

@@ -12,7 +12,32 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.super.dashboard');
+        $admins = [
+            [
+                'id' => 1,
+                'username' => 'Admin01',
+                'email' => 'admin01@example.com',
+                'password' => 'Admin01',
+                'date' => '21, oct 2024',
+            ],
+            [
+                'id' => 2,
+                'username' => 'Admin02',
+                'email' => 'admin02@example.com',
+                'password' => 'Admin02',
+                'date' => '22, oct 2024',
+            ],
+            [
+                'id' => 3,
+                'username' => 'Admin03',
+                'email' => 'admin03@example.com',
+                'password' => 'Admin03',
+                'date' => '23, oct 2024',
+            ]
+        ];
+
+        // Kirim data dummy ke view
+        return view('admin.super.dashboard', compact('admins'));
     }
 
     /**
