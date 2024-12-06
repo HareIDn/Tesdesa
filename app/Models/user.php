@@ -2,32 +2,54 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use Spatie\Permission\Traits\HasRoles; // Pastikan ini ada
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use  Notifiable, HasRoles; // Pastikan ini ada
+    use HasFactory, Notifiable, HasRoles;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'nama_lengkap',
+        'nik',
         'email',
         'password',
-        'NIK',
         'tanggal_lahir',
         'tempat_lahir',
         'agama',
         'pekerjaan',
         'alamat_lengkap',
-        'rt_rw',
+        'rt',
+        'rw',
         'kecamatan',
         'kelurahan',
         'kabupaten',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'tanggal_lahir' => 'date',
     ];
 }

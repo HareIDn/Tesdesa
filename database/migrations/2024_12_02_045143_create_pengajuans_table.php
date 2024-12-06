@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('pengajuans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('pilih_tujuan')->nullable();
+            $table->string('jenis_pengajuan');
+            $table->enum('status', [
+                'diterima',
+                'diproses',
+                'disetujui',
+                'ditolak'
+            ])->default('diterima');
+            $table->text('deskripsi')->nullable();
+            $table->datetime('tanggal_pengajuan')->nullable();
+            $table->datetime('tanggal_diproses')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -13,6 +13,21 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pengajuan_id')->constrained('pengajuans')->onDelete('cascade');
+            $table->enum('jadwal',[
+                'Senin',
+                'Selasa',
+                'Rabu',
+                'Kamis',
+                'Jumat',
+                'Sabtu',
+            ]);
+            $table->text('keterangan')->nullable();
+            $table->enum('status', [
+                'dijadwalkan',
+                'selesai',
+                'dibatalkan'
+            ])->default('dijadwalkan');
             $table->timestamps();
         });
     }

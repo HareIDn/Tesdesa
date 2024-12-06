@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('notifikasis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pengajuan_id')->constrained('pengajuans')->onDelete('cascade');
+            $table->string('judul');
+            $table->text('deskripsi')->nullable();
+            $table->enum('status', [
+                'info',
+                'success',
+                'warning',
+                'error'
+            ])->default('info');
             $table->timestamps();
         });
     }

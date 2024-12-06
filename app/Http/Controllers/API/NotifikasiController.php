@@ -1,65 +1,70 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\notifikasi;
+use App\Models\Notifikasi;
+use App\Models\Pengajuan;
+use App\Mail\NotifikasiMail;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class NotifikasiController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Menambahkan notifikasi baru.
      */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'pengajuan_id' => 'required|exists:pengajuans,id',
+            'judul' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'status' => 'nullable|in:info,success,warning,error',
+        ]);
+
+        // Mengembalikan respons jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        try {
+            // Simpan notifikasi ke database
+            $notifikasi = Notifikasi::create($request->all());
+
+            // Kirim email setelah notifikasi berhasil dibuat
+            $this->sendEmailNotification($notifikasi);
+
+            return response()->json([
+                'message' => 'Notifikasi berhasil dibuat dan email dikirim',
+                'data' => $notifikasi
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal membuat notifikasi',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Fungsi untuk mengirim email.
      */
-    public function show(notifikasi $notifikasi)
+    private function sendEmailNotification(Notifikasi $notifikasi)
     {
-        //
-    }
+        // Ambil pengajuan terkait untuk mendapatkan informasi lebih lanjut
+        $pengajuan = Pengajuan::find($notifikasi->pengajuan_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(notifikasi $notifikasi)
-    {
-        //
-    }
+        // Tentukan email yang akan dikirim (misalnya admin atau user terkait)
+        $recipientEmail = 'bagussatt09@gmail.com'; // Ganti dengan email tujuan
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, notifikasi $notifikasi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(notifikasi $notifikasi)
-    {
-        //
+        // Kirim email menggunakan Mailable NotifikasiMail
+        Mail::to($recipientEmail)->send(new NotifikasiMail($notifikasi, $pengajuan));
     }
 }

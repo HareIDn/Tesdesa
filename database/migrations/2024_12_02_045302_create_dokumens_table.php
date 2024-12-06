@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('dokumens', function (Blueprint $table) {
             $table->id();
-            $table->string('file_pdf'); // Path to the PDF in storage
-            $table->string('data_pendukung1')->nullable(); // Allow this column to be nullable
-            $table->string('data_pendukung2')->nullable(); // Allow this column to be nullable
-            $table->string('data_pendukung3')->nullable(); // Allow this column to be nullable
-            $table->string('data_pendukung4')->nullable(); // Allow this column to be nullable
-            $table->string('data_pendukung5')->nullable(); // Allow this column to be nullable
+            $table->string('jenis_dokumen');
+            $table->string('file_pdf')->nullable(); // Kolom untuk file PDF
+            $table->string('data_pendukung1')->nullable(); // Kolom data pendukung 1
+            $table->string('data_pendukung2')->nullable(); // Kolom data pendukung 2
+            $table->string('data_pendukung3')->nullable(); // Kolom data pendukung 3
+            $table->string('data_pendukung4')->nullable(); // Kolom data pendukung 4
+            $table->string('data_pendukung5')->nullable(); // Kolom data pendukung 5
+            $table->string('data_pendukung6')->nullable(); // Kolom data pendukung 6
             $table->timestamps();
         });
     }

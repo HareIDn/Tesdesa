@@ -14,21 +14,30 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nama_lengkap');
-            $table->string('NIK')->unique();
-            $table->string('email')->unique();
+            $table->string('nik')->unique();
+            $table->string('email');
             $table->string('password');
             $table->date('tanggal_lahir');
             $table->string('tempat_lahir');
-            $table->string('agama');
-            $table->string('pekerjaan');
+            $table->enum('agama', [
+                'Islam',
+                'Kristen',
+                'Katholik',
+                'Hindu',
+                'Buddha',
+                'Konghucu'
+            ]);
+            $table->string('pekerjaan')->nullable();
             $table->text('alamat_lengkap');
-            $table->string('rt_rw');
+            $table->string('rt');
+            $table->string('rw');
             $table->string('kecamatan');
             $table->string('kelurahan');
             $table->string('kabupaten');
-            $table->softDeletes(); // Tambahkan ini untuk mendukung soft delete
+            $table->rememberToken();
             $table->timestamps();
         });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

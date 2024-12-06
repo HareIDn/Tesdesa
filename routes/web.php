@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('login');
 });
 
+
 Route::get('/dashboard', function () {
     return view('admin.super.dashboard');
 })->middleware(['auth', 'verified'])->name('admin.super.dashboard');
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil.index');
 });
 
-Route::post('/dokumen', [DokumenController::class, 'store']);
+// Route::post('/dokumen', [DokumenController::class, 'store']);
 
 //Admin, nanti pake yang middleware
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
