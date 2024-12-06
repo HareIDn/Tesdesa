@@ -8,6 +8,8 @@ use App\Http\Controllers\API\PengajuanController;
 use App\Http\Controllers\API\JadwalController;
 use App\Http\Controllers\API\NotifikasiController;
 
+
+//penulisan route http://127.0.0.1:8000/api/super/(routenya contoh = users)
 Route::prefix('super')->name('super_admin.')->group(function(){
     Route::middleware('can:manage')->group(function(){
         // Routes untuk Users
@@ -44,6 +46,7 @@ Route::prefix('super')->name('super_admin.')->group(function(){
     Route::delete('dokumen/{id}', [DokumenController::class, 'destroy']);
     });
 });
+//penulisan route http://127.0.0.1:8000/api/admin/(route)
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware('can:manage')->group(function(){
          // Routes untuk Users
@@ -66,7 +69,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
          Route::get('notifikasi/{id}', [NotifikasiController::class, 'show']);
          Route::put('notifikasi/{id}', [NotifikasiController::class, 'update']);
 });
-
+//penulisan route http://127.0.0.1:8000/api/user/(route)
 Route::prefix('user')->name('user.')->group(function(){
     Route::middleware('can:make') -> group(function(){
         Route::get('jadwals', [JadwalController::class, 'index']);
