@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Surat Domisili</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -40,6 +41,7 @@
         <!-- Form -->
         <form action="#" method="POST">
             @csrf
+            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label for="nama" class="block font-medium text-gray-700">Nama Lengkap</label>
@@ -101,15 +103,45 @@
             </div>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Jika ada notifikasi sukses, maka akan menghilang setelah 5 detik
-        setTimeout(function () {
-            const notification = document.querySelector('.fixed');
-            if (notification) {
-                notification.style.display = 'none';
-            }
-        }, 5000);
-    </script>
+    document.getElementById('form-domisili').addEventListener('submit', function (e) {
+        e.preventDefault(); // Mencegah form dari submit biasa
 
+        // Mengambil data dari form
+        let formData = {
+            user_id: document.getElementById('user_id').value,  // Pastikan untuk mengganti ini dengan ID pengguna yang benar
+            pilih_tujuan: 'Domisili',
+            jenis_pengajuan: 'Surat Keterangan Domisili',
+            status: 'diproses',
+            deskripsi: document.getElementById('nama').value, // Sesuaikan sesuai data yang ada di form
+            tanggal_pengajuan: new Date().toISOString().slice(0, 10) // Mengambil tanggal sekarang dalam format YYYY-MM-DD
+            // Ambil nilai lainnya sesuai form Anda
+        };
+
+        // Kirim data menggunakan Axios
+        axios.post('/api/user/submission', formData, {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value, // CSRF Token
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        .then(function (response) {
+            // Ketika request berhasil
+            alert(response.data.message);
+        })
+        .catch(function (error) {
+            // Ketika request gagal
+            if (error.response) {
+                // Menampilkan error yang diterima dari server
+                alert('Gagal mengirim pengajuan: ' + error.response.data.message);
+            } else {
+                console.error('Terjadi kesalahan:', error);
+                alert('Gagal mengirim pengajuan');
+            }
+        });
+    });
+</script>
 </body>
 </html>
