@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,8 +28,20 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user = $request->user();
+        if ($user->hasRole('super_admin')) {
+            return redirect()->route('superadmin.index');
+        } elseif ($user->hasRole('admin')) {
+            return redirect()->route('admin.index');
+        } elseif ($user->hasRole('user')) {
+            return redirect()->route('civil.index');
+        }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+
+        // Default redirect jika tidak ada role yang cocok
+        return redirect()->route('dashboard');
+
+        // return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dokumens', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_dokumen');
+            $table->string('jenis_dokumen')->nullable(); // Kolom jenis dokumen
             $table->string('file_pdf')->nullable(); // Kolom untuk file PDF
             $table->string('data_pendukung1')->nullable(); // Kolom data pendukung 1
             $table->string('data_pendukung2')->nullable(); // Kolom data pendukung 2
