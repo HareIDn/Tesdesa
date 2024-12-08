@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <!-- Table Sections -->
+                <!-- Table Sections -->
                 <div id="table-pengajuan" class="table-section">
                     <!-- Table content for Pengajuan -->
                     @foreach(\$pengajuan as \$item)
@@ -112,22 +112,6 @@
                             <td>{{ \$item->status }}</td>
                         </tr>
                     @endforeach
-                </div> --}}
-
-                <!-- Table Sections, pake yang atas kalau mau tes -->
-                <!-- Bagian tabel untuk Surat Pengajuan -->
-                <div id="table-pengajuan" class="table-section">
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Pengajuan'])
-                </div>
-
-                <!-- Bagian tabel untuk Surat Sedang Diproses -->
-                <div id="table-proses" class="hidden table-section">
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Sedang Diproses'])
-                </div>
-
-                <!-- Bagian tabel untuk Surat Selesai Diproses -->
-                <div id="table-selesai" class="hidden table-section">
-                    @include('admin.asset.table', ['title' => 'Daftar Surat Selesai Diproses'])
                 </div>
             </div>
         </div>

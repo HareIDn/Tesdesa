@@ -1,4 +1,4 @@
-<!-- resources/views/admin/super.blade.php -->
+<!-- resources/views/admin/super/dashboard.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -62,10 +62,11 @@
                             @foreach ($admins as $index => $admin)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ $admin['username'] }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin['email'] }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin['password'] }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin['date'] }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ $admin->nama_lengkap }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->email }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->password }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->created_at->format('d, M Y') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->status }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     <button class="text-red-600 hover:text-red-900">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,12 +83,23 @@
         </div>
     </div>
 
+
     <!-- Add Admin Modal -->
     <div id="addAdminModal" class="fixed inset-0 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
         <div class="relative p-5 mx-auto bg-white border rounded-md shadow-lg top-20 w-96">
             <div class="mt-3">
                 <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Add New Admin</h3>
-                <form id="addAdminForm">
+                @if(session('success'))
+                    <div class="p-4 mb-4 text-white bg-green-500 rounded">
+                        {{ session('success') }}
+                    </div>
+                @elseif(session('error'))
+                    <div class="p-4 mb-4 text-white bg-red-500 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                <form id="addAdminForm" action="{{ route('superadmin.store') }}" method="POST">
+                    @csrf <!-- Token CSRF untuk mengamankan form submission -->
                     <div class="mb-4">
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
                         <input type="text" id="username" name="username" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
@@ -102,7 +114,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="confirmPassword" class="block mb-2 text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                        <input type="password" id="confirmPassword" name="password_confirmation" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
                     </div>
 
                     <div class="flex justify-end gap-4">
@@ -143,9 +155,7 @@
         // Form submission
         document.getElementById('addAdminForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Add your form submission logic here
 
-            // Example validation
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -153,13 +163,11 @@
                 alert('Passwords do not match!');
                 return;
             }
-
-            // You would typically send this data to your backend
-            closeModal();
-            // Reset form
-            this.reset();
+            // Jika password cocok, kirimkan form
+            this.submit();
+            closeModal(); // Menutup modal setelah submit
+            this.reset(); // Reset form setelah submit
         });
-
         // Close modal when clicking outside
         document.getElementById('addAdminModal').addEventListener('click', function(e) {
             if (e.target === this) {

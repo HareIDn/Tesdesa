@@ -51,19 +51,20 @@
                         <tbody class="bg-white divide-y divide-gray-200">
 
                             @foreach($activities as $activity)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ $activity['user'] }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['document'] }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                        {{ $activity['status'] === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                                        {{ $activity['status'] }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['date'] }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['time'] }}</td>
-                            </tr>
-                            @endforeach
+    <tr class="hover:bg-gray-50">
+        <!-- Menampilkan nama pengguna -->
+        <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ $activity['user']->nama_lengkap }}</td> <!-- Update ini -->
+        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['document'] }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                {{ $activity['status'] === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                {{ $activity['status'] }}
+            </span>
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['date'] }}</td>
+        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $activity['time'] }}</td>
+    </tr>
+@endforeach
                         </tbody>
                     </table>
                 </div>

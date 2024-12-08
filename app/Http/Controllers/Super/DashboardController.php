@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
@@ -12,29 +15,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $admins = [
-            [
-                'id' => 1,
-                'username' => 'Admin01',
-                'email' => 'admin01@example.com',
-                'password' => 'Admin01',
-                'date' => '21, oct 2024',
-            ],
-            [
-                'id' => 2,
-                'username' => 'Admin02',
-                'email' => 'admin02@example.com',
-                'password' => 'Admin02',
-                'date' => '22, oct 2024',
-            ],
-            [
-                'id' => 3,
-                'username' => 'Admin03',
-                'email' => 'admin03@example.com',
-                'password' => 'Admin03',
-                'date' => '23, oct 2024',
-            ]
-        ];
+        $admins = User::role('admin')->get();
 
         // Kirim data dummy ke view
         return view('admin.super.dashboard', compact('admins'));
@@ -53,7 +34,30 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed', // memastikan password dan konfirmasi password cocok
+        ]);
+
+        try {
+            // Menyimpan data admin baru
+            $user = User::create([
+                'nama_lengkap' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            // Assign role 'admin' kepada pengguna
+            $role = Role::findByName('admin');
+            $user->assignRole($role);
+
+            // Flash success message jika berhasil
+            return redirect()->route('admin.super.dashboard')->with('success', 'Admin baru berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            // Jika terjadi error, kirimkan pesan error
+            return redirect()->route('admin.super.dashboard')->with('error', 'Terjadi kesalahan! Gagal menambahkan admin.');
+        }
     }
 
     /**

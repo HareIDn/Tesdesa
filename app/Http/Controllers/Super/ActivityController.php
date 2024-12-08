@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -12,18 +13,22 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = [
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Biru Abadi', 'document' => 'Surat Izin Usaha', 'status' => 'Selesai', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30'],
-            ['user' => 'Mia Amelia', 'document' => 'Surat Keterangan Domisili', 'status' => 'Dalam Proses', 'date' => '2024-11-22', 'time' => '09:30']
-        ];
+        // Mengambil data aktivitas dari database (misalnya, data dari tabel aktivitas)
+        $activities = []; // Inisialisasi array kosong untuk menyimpan data aktivitas
+
+        // Mengambil data pengguna dengan role 'user' dan aktivitas terkait
+        $users = User::role('user')->get(); // Ambil semua pengguna dengan role 'user'
+
+        foreach ($users as $user) {
+            // Menambahkan data aktivitas terkait dengan pengguna
+            $activities[] = [
+                'user' => $user,
+                'document' => 'Surat Keterangan Domisili',  // Ganti dengan dokumen yang sesuai
+                'status' => 'Dalam Proses',  // Status aktivitas
+                'date' => now()->format('Y-m-d'),  // Tanggal aktivitas
+                'time' => now()->format('H:i'),  // Waktu aktivitas
+            ];
+        }
 
         // Mengirim data ke view
         return view('admin.super.activity', compact('activities'));

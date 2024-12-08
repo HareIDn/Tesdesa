@@ -52,6 +52,7 @@ Route::get('/admin/statistic', [StatistikController::class, 'index'])->name('sta
 //Super Admin, nanti pake yang middleware
 Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin.index');
 Route::get('/super/activity', [ActivityController::class, 'index'])->name('activity.index');
+Route::post('/super/add', [SuperDashboardController::class, 'store'])->name('superadmin.store');
 
 //Civil, nanti pake yang middleware
 Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil.index');
@@ -64,4 +65,36 @@ Route::get('/civil/usaha', [IjinUsahaController::class, 'createSelfData'])->name
 Route::get('/civil/usaha1', [IjinUsahaController::class, 'createBusinessData'])->name('usaha.businessdata');
 
 require __DIR__.'/auth.php';
+
+
+
+
+// // Route untuk Super Admin, hanya dapat diakses oleh superadmin
+// Route::middleware(['auth', 'verified', 'role:super_admin'])->group(function () {
+//     Route::get('/super', [SuperDashboardController::class, 'index'])->name('superadmin.index');
+//     Route::post('/super/add', [SuperDashboardController::class, 'store'])->name('superadmin.store');
+//     Route::get('/super/activity', [ActivityController::class, 'index'])->name('activity.index');
+// });
+
+// // Route untuk Admin, hanya dapat diakses oleh admin
+// Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+//     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+//     Route::get('/admin/profile', [EditProfileController::class, 'create'])->name('profile.create');
+//     Route::get('/admin/statistic', [StatistikController::class, 'index'])->name('statistic.index');
+// });
+
+// // Route untuk Civil (Warga)
+// Route::middleware(['auth', 'verified', 'role:civil'])->group(function () {
+//     Route::get('/civil', [CivilDashboardController::class, 'index'])->name('civil.index');
+//     Route::get('/civil/skck', [SKCKController::class, 'store'])->name('skck.store');
+//     Route::get('/civil/domisili', [DomisiliController::class, 'store'])->name('domisili.store');
+//     Route::get('/civil/sktm', [SKTMController::class, 'createSelfData'])->name('sktm.selfdata');
+//     Route::get('/civil/sktm1', [SKTMController::class, 'createFamilyData'])->name('sktm.familydata');
+//     Route::get('/civil/sktm2', [SKTMController::class, 'createUsage'])->name('sktm.usage');
+//     Route::get('/civil/usaha', [IjinUsahaController::class, 'createSelfData'])->name('usaha.selfdata');
+//     Route::get('/civil/usaha1', [IjinUsahaController::class, 'createBusinessData'])->name('usaha.businessdata');
+// });
+
+
+
 
