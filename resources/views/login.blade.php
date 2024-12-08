@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - Website Desa</title>
     <!-- Menyertakan file CSS dan JS yang diproses dengan Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
