@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
-     * Login user dan mendapatkan token.//
+     * Login user dan mendapatkan token.
      */
     public function login(Request $request)
     {

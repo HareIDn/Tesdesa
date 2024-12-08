@@ -27,23 +27,23 @@ Route::prefix('super')->name('super_admin.')->group(function(){
     Route::delete('/submission/{id}', [PengajuanController::class, 'destroy']);
 
     // Routes untuk Jadwal
-    Route::get('jadwals', [JadwalController::class, 'index']);
-    Route::post('jadwals', [JadwalController::class, 'store']);
-    Route::get('jadwals/{id}', [JadwalController::class, 'show']);
-    Route::put('jadwals/{id}', [JadwalController::class, 'update']);
-    Route::delete('jadwals/{id}', [JadwalController::class, 'destroy']);
+    Route::get('schedules', [JadwalController::class, 'index']);
+    Route::post('schedules', [JadwalController::class, 'store']);
+    Route::get('schedules/{id}', [JadwalController::class, 'show']);
+    Route::put('schedules/{id}', [JadwalController::class, 'update']);
+    Route::delete('schedules/{id}', [JadwalController::class, 'destroy']);
 
     // Routes untuk Notifikasi
-    Route::get('notifikasi', [NotifikasiController::class, 'index']);
-    Route::post('notifikasi', [NotifikasiController::class, 'store']);
-    Route::get('notifikasi/{id}', [NotifikasiController::class, 'show']);
-    Route::put('notifikasi/{id}', [NotifikasiController::class, 'update']);
-    Route::delete('notifikasi/{id}', [NotifikasiController::class, 'destroy']);
+    Route::get('notification', [NotifikasiController::class, 'index']);
+    Route::post('notification', [NotifikasiController::class, 'store']);
+    Route::get('notification/{id}', [NotifikasiController::class, 'show']);
+    Route::put('notification/{id}', [NotifikasiController::class, 'update']);
+    Route::delete('notification/{id}', [NotifikasiController::class, 'destroy']);
 
     // Routes untuk Dokumen
-    Route::get('dokumen', [DokumenController::class, 'index']);
-    Route::post('dokumen', [DokumenController::class, 'store']);
-    Route::delete('dokumen/{id}', [DokumenController::class, 'destroy']);
+    Route::get('document', [DokumenController::class, 'index']);
+    Route::post('document', [DokumenController::class, 'store']);
+    Route::delete('document/{id}', [DokumenController::class, 'destroy']);
     });
 });
 //penulisan route http://127.0.0.1:8000/api/admin/(route)
@@ -60,29 +60,29 @@ Route::prefix('admin')->name('admin.')->group(function(){
          Route::put('/submission/{id}', [PengajuanController::class, 'update']);
 
          // Routes untuk Jadwal
-         Route::get('jadwals', [JadwalController::class, 'index']);
-         Route::get('jadwals/{id}', [JadwalController::class, 'show']);
-         Route::put('jadwals/{id}', [JadwalController::class, 'update']);
+         Route::get('schedules', [JadwalController::class, 'index']);
+         Route::get('schedules/{id}', [JadwalController::class, 'show']);
+         Route::put('schedules/{id}', [JadwalController::class, 'update']);
 
          // Routes untuk Notifikasi
-         Route::get('notifikasi', [NotifikasiController::class, 'index']);
-         Route::get('notifikasi/{id}', [NotifikasiController::class, 'show']);
-         Route::put('notifikasi/{id}', [NotifikasiController::class, 'update']);
+         Route::get('notification', [NotifikasiController::class, 'index']);
+         Route::get('notification/{id}', [NotifikasiController::class, 'show']);
+         Route::put('notification/{id}', [NotifikasiController::class, 'update']);
 });
 //penulisan route http://127.0.0.1:8000/api/user/(route)
 Route::prefix('user')->name('user.')->group(function(){
     Route::middleware('can:make') -> group(function(){
-        Route::get('jadwals', [JadwalController::class, 'index']);
-        Route::post('jadwals', [JadwalController::class, 'store']);
-        Route::get('jadwals/{id}', [JadwalController::class, 'show']);
+        Route::get('schedules', [JadwalController::class, 'index']);
+        Route::post('schedules', [JadwalController::class, 'store']);
+        Route::get('schedules/{id}', [JadwalController::class, 'show']);
 
         // Routes untuk Pengajuan
         Route::get('/submission', [PengajuanController::class, 'index']);
         Route::post('/submission', [PengajuanController::class, 'store']);
         Route::get('/submission/{id}', [PengajuanController::class, 'show']);
       // routes dokumen
-        Route::get('dokumen', [DokumenController::class, 'index']); // Menampilkan semua dokumen
-        Route::post('dokumen', [DokumenController::class, 'store']); // Menyimpan dokumen baru
+        Route::get('document', [DokumenController::class, 'index']); // Menampilkan semua dokumen
+        Route::post('document', [DokumenController::class, 'store']); // Menyimpan dokumen baru
     });
 });});
 
