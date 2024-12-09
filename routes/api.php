@@ -24,28 +24,28 @@ Route::prefix('super')->name('super_admin.')->group(function(){
 
     // Routes untuk Pengajuan
     Route::get('/submission', [PengajuanController::class, 'index']);
-    Route::post('/submission', [PengajuanController::class, 'store']);
+    Route::post('/submission/post', [PengajuanController::class, 'store']);
     Route::get('/submission/{id}', [PengajuanController::class, 'show']);
     Route::put('/submission/{id}', [PengajuanController::class, 'update']);
     Route::delete('/submission/{id}', [PengajuanController::class, 'destroy']);
 
     // Routes untuk Jadwal
     Route::get('schedules', [JadwalController::class, 'index']);
-    Route::post('schedules', [JadwalController::class, 'store']);
+    Route::post('schedules/post', [JadwalController::class, 'store']);
     Route::get('schedules/{id}', [JadwalController::class, 'show']);
     Route::put('schedules/{id}', [JadwalController::class, 'update']);
     Route::delete('schedules/{id}', [JadwalController::class, 'destroy']);
 
     // Routes untuk Notifikasi
     Route::get('notification', [NotifikasiController::class, 'index']);
-    Route::post('notification', [NotifikasiController::class, 'store']);
+    Route::post('notification/post', [NotifikasiController::class, 'store']);
     Route::get('notification/{id}', [NotifikasiController::class, 'show']);
     Route::put('notification/{id}', [NotifikasiController::class, 'update']);
     Route::delete('notification/{id}', [NotifikasiController::class, 'destroy']);
 
     // Routes untuk Dokumen
     Route::get('document', [DokumenController::class, 'index']);
-    Route::post('document', [DokumenController::class, 'store']);
+    Route::post('document/post', [DokumenController::class, 'store']);
     Route::delete('document/{id}', [DokumenController::class, 'destroy']);
     });
 });
@@ -58,7 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
          // Routes untuk Pengajuan
          Route::get('/submission', [PengajuanController::class, 'index']);
-         Route::post('/submission', [PengajuanController::class, 'store']);
+         Route::post('/submission/post', [PengajuanController::class, 'store']);
          Route::get('/submission/{id}', [PengajuanController::class, 'show']);
          Route::put('/submission/{id}', [PengajuanController::class, 'update']);
 
@@ -76,16 +76,16 @@ Route::prefix('admin')->name('admin.')->group(function(){
 Route::prefix('user')->name('user.')->group(function(){
     Route::middleware('can:make') -> group(function(){
         Route::get('schedules', [JadwalController::class, 'index']);
-        Route::post('schedules', [JadwalController::class, 'store']);
+        Route::post('schedules/post', [JadwalController::class, 'store']);
         Route::get('schedules/{id}', [JadwalController::class, 'show']);
 
         // Routes untuk Pengajuan
         Route::get('/submission', [PengajuanController::class, 'index']);
-        Route::post('/submission', [PengajuanController::class, 'store']);
+        Route::post('/submission/post', [PengajuanController::class, 'store']);
         Route::get('/submission/{id}', [PengajuanController::class, 'show']);
       // routes dokumen
         Route::get('document', [DokumenController::class, 'index']); // Menampilkan semua dokumen
-        Route::post('document', [DokumenController::class, 'store']); // Menyimpan dokumen baru
+        Route::post('document/post', [DokumenController::class, 'store']); // Menyimpan dokumen baru
     });
 });});
 
