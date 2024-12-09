@@ -24,7 +24,7 @@ class AuthController extends Controller
                 $loggedInUsers[] = [
                     'user' => [
                         'id' => $user->id,
-                        'name' => $user->nama,
+                        'nama_lengkap' => $user->nama_lengkap,
                         'email' => $user->email,
                     ],
                     'token' => $token->token,
@@ -57,7 +57,7 @@ class AuthController extends Controller
         try{
             $user->update(['is_logged_in' => true]);
 
-            $token = $user->createToken($user->name)->plainTextToken;
+            $token = $user->createToken($user->nama_lengkap)->plainTextToken;
 
             return response()->json([
                 'success' => true,
