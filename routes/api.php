@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DokumenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,12 +10,14 @@ use App\Http\Controllers\API\JadwalController;
 use App\Http\Controllers\API\NotifikasiController;
 
 
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
 //penulisan route http://127.0.0.1:8000/api/super/(routenya contoh = users)
 Route::prefix('super')->name('super_admin.')->group(function(){
     Route::middleware('can:manage')->group(function(){
         // Routes untuk Users
     Route::get('/users', [UsersController::class, 'index']);
-    Route::post('/users', [UsersController::class, 'store']);
+    Route::post('/users/post', [UsersController::class, 'store']);
     Route::get('/users/{user}', [UsersController::class, 'show']);
     Route::put('/users/{user}', [UsersController::class, 'update']);
     Route::delete('/users/{user}', [UsersController::class, 'destroy']);

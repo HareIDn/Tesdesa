@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Beranda Admin</title>
     <!-- Menyertakan file CSS dan JS yang diproses dengan Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -83,11 +84,11 @@
                 <!-- Table Sections -->
                 <div id="table-pengajuan" class="table-section">
                     <!-- Table content for Pengajuan -->
-                    @foreach(\$pengajuan as \$item)
+                    @foreach($pengajuan as $item)
                         <tr>
-                            <td>{{ \$item->id }}</td>
-                            <td>{{ \$item->nama }}</td>
-                            <td>{{ \$item->status }}</td>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->nama }}</td>
+                            <td>{{ $item->status }}</td>
                         </tr>
                     @endforeach
                 </div>

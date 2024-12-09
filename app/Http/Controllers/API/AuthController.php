@@ -16,29 +16,35 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // Validasi input
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+        $validatedData = $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
-        // Cari user berdasarkan email
-        $user = User::where('email', $validated['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
-        // Periksa apakah user ditemukan dan password cocok
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        if (!Auth::attempt($validatedData)) {
             return response()->json([
-                'message' => 'Email atau password salah.',
+                'success' => false,
+                'message' => 'Login failed. Please check your credentials.'
             ], 401);
         }
+        try {
+            $user->update(['is_logged_in' => true]);
 
-        // Buat token untuk pengguna
-        $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken($user->name)->plainTextToken;
 
-        return response()->json([
-            'message' => 'Login berhasil!',
-            'token' => $token,
-            'user' => $user,
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'access_token' => $token
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'Login failed.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

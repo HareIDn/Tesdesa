@@ -6,8 +6,8 @@
     <nav class="mt-6">
         <div class="px-4">
             <!-- Menu Sidebar: Users -->
-            <div class="p-4 mb-4 rounded-lg {{ request()->routeIs('superadmin.index') ? 'bg-green-800' : '' }}">
-                <a href="{{ route('superadmin.index') }}" class="flex items-center gap-2 text-white">
+            <div class="p-4 mb-4 rounded-lg {{ request()->routeIs('superadmindashboard') ? 'bg-green-800' : '' }}">
+                <a href="{{ route('superadmindashboard') }}" class="flex items-center gap-2 text-white">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
