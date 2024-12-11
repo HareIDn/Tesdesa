@@ -39,9 +39,9 @@
         <p class="mb-6 text-center text-gray-600">Isi formulir di bawah ini dengan lengkap</p>
 
         <!-- Form -->
-        <form action="#" method="POST">
+        <form action="" id="form-domisili" method="POST">
             @csrf
-            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+            <input type="hidden" id="domiisle" name="user_id" value="{{ auth()->user()->id }}">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label for="nama" class="block font-medium text-gray-700">Nama Lengkap</label>
@@ -103,45 +103,88 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-    document.getElementById('form-domisili').addEventListener('submit', function (e) {
-        e.preventDefault(); // Mencegah form dari submit biasa
+        document.getElementById('form-domisili').addEventListener('submit', function (e) {
+            e.preventDefault(); // Mencegah form dari submit biasa
 
-        // Mengambil data dari form
-        let formData = {
-            user_id: document.getElementById('user_id').value,  // Pastikan untuk mengganti ini dengan ID pengguna yang benar
-            pilih_tujuan: 'Domisili',
-            jenis_pengajuan: 'Surat Keterangan Domisili',
-            status: 'diproses',
-            deskripsi: document.getElementById('nama').value, // Sesuaikan sesuai data yang ada di form
-            tanggal_pengajuan: new Date().toISOString().slice(0, 10) // Mengambil tanggal sekarang dalam format YYYY-MM-DD
-            // Ambil nilai lainnya sesuai form Anda
-        };
+            // Ambil elemen input yang wajib diisi
+            const requiredFields = [
+                'nama', 'nik', 'tempat', 'tanggal_lahir', 'jenis_kelamin',
+                'agama', 'pekerjaan', 'telepon', 'alamat', 'rt_rw',
+                'kelurahan', 'kecamatan', 'kabupaten'
+            ];
 
-        // Kirim data menggunakan Axios
-        axios.post('/api/user/submission', formData, {
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value, // CSRF Token
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+            // Validasi input: pastikan semua input wajib diisi
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('border-red-500'); // Tambahkan border merah jika kosong
+                } else {
+                    field.classList.remove('border-red-500'); // Hapus border merah jika terisi
+                }
+            });
+
+            // Jika ada input yang kosong, tampilkan pesan peringatan
+            if (!isValid) {
+                alert('Mohon isi semua field yang wajib diisi.');
+                return;
             }
-        })
-        .then(function (response) {
-            // Ketika request berhasil
-            alert(response.data.message);
-        })
-        .catch(function (error) {
-            // Ketika request gagal
-            if (error.response) {
-                // Menampilkan error yang diterima dari server
-                alert('Gagal mengirim pengajuan: ' + error.response.data.message);
-            } else {
-                console.error('Terjadi kesalahan:', error);
-                alert('Gagal mengirim pengajuan');
-            }
+
+            // Ambil data dari form setelah validasi
+            const formData = {
+                user_id: document.getElementById('domiisle').value, // ID user
+                pilih_tujuan: 'Domisili', // Sesuaikan tujuan
+                jenis_pengajuan: 'Surat Keterangan Domisili',
+                status: 'diproses',
+                deskripsi: document.getElementById('nama').value, // Deskripsi atau nama lengkap
+                tanggal_pengajuan: new Date().toISOString().slice(0, 10), // Tanggal hari ini dalam format YYYY-MM-DD
+                tempat: document.getElementById('tempat').value,
+                tanggal_lahir: document.getElementById('tanggal_lahir').value,
+                jenis_kelamin: document.getElementById('jenis_kelamin').value,
+                agama: document.getElementById('agama').value,
+                pekerjaan: document.getElementById('pekerjaan').value,
+                telepon: document.getElementById('telepon').value,
+                alamat: document.getElementById('alamat').value,
+                rt_rw: document.getElementById('rt_rw').value,
+                kelurahan: document.getElementById('kelurahan').value,
+                kecamatan: document.getElementById('kecamatan').value,
+                kabupaten: document.getElementById('kabupaten').value
+            };
+
+            // Kirim data menggunakan Fetch API setelah validasi berhasil
+            fetch('http://tesdesa.test/api/nr/submission/post', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // CSRF Token
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData) // Konversi data ke JSON
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // Jika respons tidak berhasil
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json(); // Parsing JSON jika berhasil
+            })
+            .then(data => {
+                // Ketika request berhasil
+                alert('Pengajuan berhasil dikirim: ' + data.message);
+                window.location.href = '/civil'; // Redirect ke halaman dashboard
+            })
+            .catch(error => {
+                // Ketika request gagal
+                if (error.message) {
+                    alert('Gagal mengirim pengajuan: ' + error.message);
+                } else {
+                    console.error('Terjadi kesalahan:', error);
+                    alert('Gagal mengirim pengajuan');
+                }
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>

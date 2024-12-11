@@ -86,7 +86,7 @@
 
             <!-- Service History Table -->
             <div>
-                <h3 class="mb-4 text-lg font-semibold">Riwayat E-Layanan</h3>
+                <h3 class="mb-4 text-lg font-semibold">Riwayat E-Layanan</h3> {{ Auth::user()->roles }}
                 <div class="overflow-hidden bg-white rounded-lg shadow">
                     <table class="min-w-full">
                         <thead class="bg-custom-green bg-opacity-10">
