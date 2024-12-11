@@ -137,7 +137,7 @@
                 user_id: document.getElementById('domiisle').value, // ID user
                 pilih_tujuan: 'Domisili', // Sesuaikan tujuan
                 jenis_pengajuan: 'Surat Keterangan Domisili',
-                status: 'diproses',
+                status: 'Diproses',
                 deskripsi: document.getElementById('nama').value, // Deskripsi atau nama lengkap
                 tanggal_pengajuan: new Date().toISOString().slice(0, 10), // Tanggal hari ini dalam format YYYY-MM-DD
                 tempat: document.getElementById('tempat').value,
@@ -154,7 +154,7 @@
             };
 
             // Kirim data menggunakan Fetch API setelah validasi berhasil
-            fetch('http://tesdesa.test/api/nr/submission/post', {
+            fetch('http://tesdesa.test/api/user/submission/post', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // CSRF Token

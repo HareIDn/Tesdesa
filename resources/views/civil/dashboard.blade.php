@@ -86,7 +86,7 @@
 
             <!-- Service History Table -->
             <div>
-                <h3 class="mb-4 text-lg font-semibold">Riwayat E-Layanan</h3> {{ Auth::user()->roles }}
+                <h3 class="mb-4 text-lg font-semibold">Riwayat E-Layanan</h3>
                 <div class="overflow-hidden bg-white rounded-lg shadow">
                     <table class="min-w-full">
                         <thead class="bg-custom-green bg-opacity-10">
@@ -112,7 +112,7 @@
                     tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
 
                     // Gunakan fetch untuk mengambil data riwayat pengajuan
-                    fetch('http://tesdesa.test/api/nr/submission', {
+                    fetch('http://tesdesa.test/api/user/submission', {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer {{ auth()->user()->api_token }}`, // Token autentikasi, sesuaikan jika berbeda
@@ -153,7 +153,7 @@
                             const row = document.createElement('tr');
                             row.classList.add('hover:bg-gray-50');
                             row.innerHTML = `
-                                <td class="px-6 py-4">${item.jenis_pengajuan || 'Tidak tersedia'}</td>
+                                <td class="px-6 py-4">${item.pilih_tujuan || 'Tidak tersedia'}</td>
                                 <td class="px-6 py-4">${item.status || 'Tidak tersedia'}</td>
                                 <td class="px-6 py-4">${item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleDateString() : '-'}</td>
                                 <td class="px-6 py-4">${item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleTimeString() : '-'}</td>
