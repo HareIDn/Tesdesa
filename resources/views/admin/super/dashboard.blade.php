@@ -122,7 +122,7 @@
             const loadingIndicator = document.getElementById('loading');
             loadingIndicator.style.display = 'block';
 
-            fetch('http://tesdesa.test/api/nr/users', {
+            fetch('http://tesdesa.test/api/super/users', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
