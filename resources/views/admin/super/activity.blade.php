@@ -60,74 +60,108 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const sidebar = document.querySelector('.min-h-screen > div:first-child');
-
-        mobileMenuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('absolute');
-            sidebar.classList.toggle('z-50');
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('h-screen');
-        });
         document.addEventListener('DOMContentLoaded', function () {
-        const loadingIndicator = document.getElementById('loading');
-        const tableBody = document.getElementById('activities-table');
-        loadingIndicator.style.display = 'block'; // Tampilkan loading
+    const loadingIndicator = document.getElementById('loading');
+    const tableBody = document.getElementById('activities-table');
 
-        axios.get('/super/submission')
-        .then(response => {
+    loadingIndicator.style.display = 'block'; // Tampilkan loading
+
+    // Menggunakan fetch untuk mengambil data
+    fetch('http://tesdesa.test/api/super/submission', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer {{ auth()->user()->api_token }}` // Token autentikasi, sesuaikan dengan kebutuhan
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); // Parsing response menjadi JSON
+    })
+    .then(data => {
         loadingIndicator.style.display = 'none'; // Sembunyikan loading setelah data diambil
 
-        const activities = response.data.data;
-        tableBody.innerHTML = '';
+        const activities = Array.isArray(data.data) ? data.data : []; // Pastikan `activities` adalah array
 
+        tableBody.innerHTML = ''; // Hapus konten tabel sebelumnya
+
+        if (activities.length === 0) {
+            // Jika tidak ada data
+            const emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = `
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data aktivitas.</td>
+            `;
+            tableBody.appendChild(emptyRow);
+            return;
+        }
+
+        // Iterasi data aktivitas
         activities.forEach(activity => {
-        const row = document.createElement('tr');
-        row.classList.add('hover:bg-gray-50');
+            const row = document.createElement('tr');
+            row.classList.add('hover:bg-gray-50');
 
-        const userCell = document.createElement('td');
-        userCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
-        userCell.textContent = activity.user.nama_lengkap;
-        row.appendChild(userCell);
+            // Kolom User
+            const userCell = document.createElement('td');
+            userCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
+            userCell.textContent = activity.user?.nama_lengkap || 'Tidak tersedia'; // Handle jika user atau nama_lengkap tidak tersedia
+            row.appendChild(userCell);
 
-        const documentCell = document.createElement('td');
-        documentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-        documentCell.textContent = activity.document;
-        row.appendChild(documentCell);
+            // Kolom Document
+            const documentCell = document.createElement('td');
+            documentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
+            documentCell.textContent = activity.document || 'Tidak tersedia'; // Handle jika document tidak tersedia
+            row.appendChild(documentCell);
 
-        const statusCell = document.createElement('td');
-        statusCell.classList.add('px-6', 'py-4');
-        const statusSpan = document.createElement('span');
-        statusSpan.classList.add(
-        'px-3', 'py-1', 'inline-flex', 'text-xs', 'leading-5', 'font-semibold', 'rounded-full',
-        activity.status === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-        );
-        statusSpan.textContent = activity.status;
-        statusCell.appendChild(statusSpan);
-        row.appendChild(statusCell);
+            // Kolom Status
+            const statusCell = document.createElement('td');
+            statusCell.classList.add('px-6', 'py-4');
+            const statusSpan = document.createElement('span');
 
-        const dateCell = document.createElement('td');
-        dateCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-        dateCell.textContent = activity.date;
-        row.appendChild(dateCell);
+            const statusClasses = activity.status === 'Selesai'
+                ? ['bg-green-100', 'text-green-800']
+                : ['bg-blue-100', 'text-blue-800'];
 
-        const timeCell = document.createElement('td');
-        timeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-        timeCell.textContent = activity.time;
-        row.appendChild(timeCell);
+            statusSpan.classList.add(
+                'px-3', 'py-1', 'inline-flex', 'text-xs', 'leading-5', 'font-semibold', 'rounded-full',
+                ...statusClasses // Tambahkan kelas menggunakan spread operator
+            );
+            statusSpan.textContent = activity.status || 'Tidak tersedia'; // Handle jika status tidak tersedia
+            statusCell.appendChild(statusSpan);
+            row.appendChild(statusCell);
 
-        tableBody.appendChild(row);
+            // Kolom Date
+            const dateCell = document.createElement('td');
+            dateCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
+            dateCell.textContent = activity.date || 'Tidak tersedia'; // Handle jika date tidak tersedia
+            row.appendChild(dateCell);
+
+            // Kolom Time
+            const timeCell = document.createElement('td');
+            timeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
+            timeCell.textContent = activity.time || 'Tidak tersedia'; // Handle jika time tidak tersedia
+            row.appendChild(timeCell);
+
+            // Tambahkan baris ke tabel
+            tableBody.appendChild(row);
         });
-        })
-        .catch(error => {
+    })
+    .catch(error => {
+        // Tangani error saat pengambilan data
         loadingIndicator.style.display = 'none';
         alert('Terjadi kesalahan saat mengambil data aktivitas.');
         console.error('Error:', error);
-        });
-        });
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="px-6 py-4 text-center text-red-500">Terjadi kesalahan dalam memuat data aktivitas.</td>
+            </tr>
+        `;
+    });
+});
 
     </script>
+
+
 </body>
 </html>

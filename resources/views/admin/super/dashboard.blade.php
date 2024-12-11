@@ -1,4 +1,3 @@
-<!-- resources/views/admin/super/dashboard.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -36,16 +35,6 @@
                     </button>
                 </div>
 
-                <!-- Search Bar -->
-                <div class="flex gap-4 mb-6">
-                    <input type="text" placeholder="Search" class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
-                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
-                </div>
-
                 <!-- Table -->
                 <div class="overflow-hidden bg-white rounded-lg shadow">
                     <table class="w-full">
@@ -59,48 +48,22 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($admins as $index => $admin)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ $admin->nama_lengkap }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->email }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->password }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->created_at->format('d, M Y') }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $admin->status }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
+                        <tbody id="admin-table" class="bg-white divide-y divide-gray-200">
+                            <!-- Data akan dimuat menggunakan JavaScript -->
                         </tbody>
                     </table>
+                    <div id="loading" class="py-4 text-center">Loading...</div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- Add Admin Modal -->
     <div id="addAdminModal" class="fixed inset-0 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
         <div class="relative p-5 mx-auto bg-white border rounded-md shadow-lg top-20 w-96">
             <div class="mt-3">
                 <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Add New Admin</h3>
-                @if(session('success'))
-                    <div class="p-4 mb-4 text-white bg-green-500 rounded">
-                        {{ session('success') }}
-                    </div>
-                @elseif(session('error'))
-                    <div class="p-4 mb-4 text-white bg-red-500 rounded">
-                        {{ session('error') }}
-                    </div>
-                @endif
-                <form id="addAdminForm" action="{{ route('superadmin.store') }}" method="POST">
-                    @csrf <!-- Token CSRF untuk mengamankan form submission -->
+                <form id="addAdminForm">
                     <div class="mb-4">
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
                         <input type="text" id="username" name="username" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
@@ -153,10 +116,59 @@
             document.getElementById('addAdminModal').classList.add('hidden');
         }
 
-        // Form submission
-        document.getElementById('addAdminForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Fetch admin data
+        function fetchAdmins() {
+            const tableBody = document.getElementById('admin-table');
+            const loadingIndicator = document.getElementById('loading');
+            loadingIndicator.style.display = 'block';
 
+            fetch('http://tesdesa.test/api/nr/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer {{ auth()->user()->api_token }}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingIndicator.style.display = 'none';
+                tableBody.innerHTML = '';
+
+                const admins = Array.isArray(data.data) ? data.data : [];
+                if (admins.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-gray-500">No admins found.</td></tr>`;
+                    return;
+                }
+                admins.forEach((admin, index) => {
+                    const row = `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">${index + 1}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">${admin.nama_lengkap}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${admin.email}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">********</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${new Date(admin.created_at).toLocaleDateString()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                <button onclick="deleteAdmin(${admin.id})" class="text-red-600 hover:text-red-900">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => {
+                loadingIndicator.style.display = 'none';
+                console.error('Error fetching admins:', error);
+            });
+        }
+
+        // Add admin
+        document.getElementById('addAdminForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -164,17 +176,51 @@
                 alert('Passwords do not match!');
                 return;
             }
-            // Jika password cocok, kirimkan form
-            this.submit();
-            closeModal(); // Menutup modal setelah submit
-            this.reset(); // Reset form setelah submit
-        });
-        // Close modal when clicking outside
-        document.getElementById('addAdminModal').addEventListener('click', function(e) {
-            if (e.target === this) {
+
+            const adminData = { username, email, password };
+
+            fetch('/api/super/admins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer {{ auth()->user()->api_token }}`
+                },
+                body: JSON.stringify(adminData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Admin added successfully!');
                 closeModal();
-            }
+                fetchAdmins();
+            })
+            .catch(error => {
+                console.error('Error adding admin:', error);
+                alert('Failed to add admin.');
+            });
         });
+
+        // Delete admin
+        function deleteAdmin(adminId) {
+            if (!confirm('Are you sure you want to delete this admin?')) return;
+            fetch(`/api/super/admins/${adminId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer {{ auth()->user()->api_token }}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Admin deleted successfully!');
+                fetchAdmins();
+            })
+            .catch(error => {
+                console.error('Error deleting admin:', error);
+                alert('Failed to delete admin.');
+            });
+        }
+
+        // Load admin data on page load
+        document.addEventListener('DOMContentLoaded', fetchAdmins);
     </script>
 </body>
 </html>

@@ -3,35 +3,24 @@
 namespace App\Http\Controllers\Civil;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengajuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $serviceHistory = [
-            [
-                'service' => 'Surat Izin Usaha',
-                'status' => 'Selesai',
-                'date' => '2024-01-08',
-                'time' => '13:00',
-            ],
-            [
-                'service' => 'Surat Keterangan Domisili',
-                'status' => 'Proses',
-                'date' => '2024-02-15',
-                'time' => '10:30',
-            ],
-            [
-                'service' => 'Surat Keterangan Tidak Mampu',
-                'status' => 'Selesai',
-                'date' => '2024-03-22',
-                'time' => '09:00',
-            ],
-        ];
+
+        $user = $request->user();
+
+        $serviceHistory = Pengajuan::where('user_id', $user->id)
+            ->orderBy('tanggal_pengajuan', 'desc') // Menampilkan berdasarkan tanggal pengajuan terbaru
+            ->get();
 
         // Kirim data ke view
         return view('civil.dashboard', compact('serviceHistory'));
@@ -81,8 +70,14 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

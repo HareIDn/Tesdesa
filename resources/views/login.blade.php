@@ -57,7 +57,7 @@
                             <x-auth-session-status class="mb-4" :status="session('status')" />
 
                             <!-- Form Login -->
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('logins') }}">
                                 @csrf
                                 <!-- Input Email -->
                                 <div class="mb-4">

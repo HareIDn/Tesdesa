@@ -10,7 +10,7 @@ use App\Http\Controllers\API\JadwalController;
 use App\Http\Controllers\API\NotifikasiController;
 
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
 
 
