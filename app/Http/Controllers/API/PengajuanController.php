@@ -13,21 +13,30 @@ class PengajuanController extends Controller
     /**
      * Menampilkan daftar pengajuan.
      */
-    public function index()
-    {
-        try {
-            $pengajuan = Pengajuan::all(); // Menampilkan semua pengajuan
-            return response()->json([
-                'message' => 'Data pengajuan berhasil diambil',
-                'data' => $pengajuan
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Gagal mengambil data pengajuan',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+    public function index(Request $request)
+{
+    try {
+        // Ambil ID pengguna yang sedang login
+        $userId = $request->user()->id;
+
+        // Filter data pengajuan berdasarkan ID pengguna
+        $pengajuan = Pengajuan::where('user_id', $userId)->get();
+
+        // Kembalikan data pengajuan sebagai respons JSON
+        return response()->json([
+            'message' => 'Data pengajuan berhasil diambil',
+            'data' => $pengajuan
+        ], 200);
+    } catch (\Exception $e) {
+        // Tangani error
+        return response()->json([
+            'message' => 'Gagal mengambil data pengajuan',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
+
 
     /**
      * Menambahkan pengajuan baru.
