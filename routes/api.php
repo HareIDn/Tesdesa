@@ -8,12 +8,12 @@ use App\Http\Controllers\API\UsersController;
 use App\Http\Controllers\API\PengajuanController;
 use App\Http\Controllers\API\JadwalController;
 use App\Http\Controllers\API\NotifikasiController;
-
+use App\Http\Controllers\API\RoleController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/users/role/{roleName}', [RoleController::class, 'getUsersByRole']);
-Route::put('/users/{userId}/role', [RoleController::class, 'updateUserRole']);
+Route::get('/role/{roleName}', [RoleController::class, 'getUsersByRole']);
+Route::put('/{userId}/role', [RoleController::class, 'updateUserRole']);
 
 
 // Route::prefix('nr')->group(function(){
@@ -56,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
     // Routes untuk Super Admin
     Route::prefix('super')->group(function() {
         // Routes untuk Users
+        Route::get('/role/{roleName}', [RoleController::class, 'getUsersByRole'])->middleware('role:super_admin|manage');
+Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middleware('role:super_admin|manage');
         Route::get('/users', [UsersController::class, 'index'])->middleware('role:super_admin|manage');
         Route::post('/users/post', [UsersController::class, 'store'])->middleware('role:super_admin');
         Route::get('/users/{user}', [UsersController::class, 'show'])->middleware('role:super_admin|manage');
