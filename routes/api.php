@@ -12,6 +12,8 @@ use App\Http\Controllers\API\NotifikasiController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/users/role/{roleName}', [RoleController::class, 'getUsersByRole']);
+Route::put('/users/{userId}/role', [RoleController::class, 'updateUserRole']);
 
 
 // Route::prefix('nr')->group(function(){
