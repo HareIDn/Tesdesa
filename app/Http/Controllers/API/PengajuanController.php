@@ -14,29 +14,114 @@ class PengajuanController extends Controller
      * Menampilkan daftar pengajuan.
      */
     public function index(Request $request)
-{
-    try {
-        // Ambil ID pengguna yang sedang login
-        $userId = $request->user()->id;
+    {
+        try {
+            // Ambil ID pengguna yang sedang login
+            $userId = $request->user()->id;
 
-        // Filter data pengajuan berdasarkan ID pengguna
-        $pengajuan = Pengajuan::where('user_id', $userId)->get();
+            // Filter data pengajuan berdasarkan ID pengguna
+            $pengajuan = Pengajuan::where('user_id', $userId)->get();
 
-        // Kembalikan data pengajuan sebagai respons JSON
-        return response()->json([
-            'message' => 'Data pengajuan berhasil diambil',
-            'data' => $pengajuan
-        ], 200);
-    } catch (\Exception $e) {
-        // Tangani error
-        return response()->json([
-            'message' => 'Gagal mengambil data pengajuan',
-            'error' => $e->getMessage()
-        ], 500);
+            // Kembalikan data pengajuan sebagai respons JSON
+            return response()->json([
+                'message' => 'Data pengajuan berhasil diambil',
+                'data' => $pengajuan
+            ], 200);
+        } catch (\Exception $e) {
+            // Tangani error
+            return response()->json([
+                'message' => 'Gagal mengambil data pengajuan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
+
+    public function indexUser(Request $request)
+        {
+            try {
+                // Ambil pengguna yang sedang login
+                $user = $request->user();
+
+                // Periksa apakah pengguna memiliki role "Admin Level 3"
+                if (!$user->hasRole('super_admin')) {
+                    return response()->json([
+                        'message' => 'Anda tidak memiliki akses untuk data ini',
+                    ], 403);
+                }
+
+                // Ambil data pengajuan yang terkait dengan pengguna ber-role "Role ID 1" atau "Role ID 2"
+                $pengajuan = Pengajuan::whereHas('user.roles', function ($query) {
+                    $query->whereIn('id', [1]);
+                })->get();
+
+                // Kembalikan data pengajuan
+                return response()->json([
+                    'message' => 'Data pengajuan berhasil diambil',
+                    'data' => $pengajuan
+                ], 200);
+            } catch (\Exception $e) {
+                // Tangani error
+                return response()->json([
+                    'message' => 'Gagal mengambil data pengajuan',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
+        public function indexAdmin(Request $request)
+        {
+            try {
+                // Ambil pengguna yang sedang login
+                $user = $request->user();
+
+                // Periksa apakah pengguna memiliki role "Admin Level 3"
+                if (!$user->hasRole('super_admin')) {
+                    return response()->json([
+                        'message' => 'Anda tidak memiliki akses untuk data ini',
+                    ], 403);
+                }
+
+                // Ambil data pengajuan yang terkait dengan pengguna ber-role "Role ID 1" atau "Role ID 2"
+                $pengajuan = Pengajuan::whereHas('user.roles', function ($query) {
+                    $query->whereIn('id', [2]);
+                })->get();
+
+                // Kembalikan data pengajuan
+                return response()->json([
+                    'message' => 'Data pengajuan berhasil diambil',
+                    'data' => $pengajuan
+                ], 200);
+            } catch (\Exception $e) {
+                // Tangani error
+                return response()->json([
+                    'message' => 'Gagal mengambil data pengajuan',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
 
 
+    public function indexAll(Request $request)
+    {
+        try {
+            // Ambil ID pengguna yang sedang login
+            $userId = $request->user()->id;
+
+            // Filter data pengajuan berdasarkan ID pengguna
+            $pengajuan = Pengajuan::all();
+
+            // Kembalikan data pengajuan sebagai respons JSON
+            return response()->json([
+                'message' => 'Data pengajuan berhasil diambil',
+                'data' => $pengajuan
+            ], 200);
+        } catch (\Exception $e) {
+            // Tangani error
+            return response()->json([
+                'message' => 'Gagal mengambil data pengajuan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     /**
      * Menambahkan pengajuan baru.

@@ -66,6 +66,9 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
         // Routes untuk Pengajuan
         Route::get('/submission', [PengajuanController::class, 'index'])->middleware('role:super_admin|manage');
+        Route::get('/submission/admin', [PengajuanController::class, 'indexAdmin'])->middleware('role:super_admin|manage');
+        Route::get('/submission/user', [PengajuanController::class, 'indexUser'])->middleware('role:super_admin|manage');
+        Route::get('/submission/all', [PengajuanController::class, 'indexAll'])->middleware('role:super_admin|manage');
         Route::post('/submission/post', [PengajuanController::class, 'store'])->middleware('role:super_admin');
         Route::get('/submission/{id}', [PengajuanController::class, 'show'])->middleware('role:super_admin|manage');
         Route::put('/submission/{id}', [PengajuanController::class, 'update'])->middleware('role:super_admin|manage');
