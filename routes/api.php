@@ -14,7 +14,10 @@ Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/role/{roleName}', [RoleController::class, 'getUsersByRole']);
 Route::put('/{userId}/role', [RoleController::class, 'updateUserRole']);
-
+Route::get('/submission', [PengajuanController::class, 'index']);
+Route::get('/submission/admin', [PengajuanController::class, 'indexAdmin']);
+Route::get('/submission/user', [PengajuanController::class, 'indexUser']);
+Route::get('/submission/all', [PengajuanController::class, 'indexAll']);
 
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
