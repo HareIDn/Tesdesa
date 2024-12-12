@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="mt-4 text-center">
-                    <button type="button" onclick="tambahAnggotaKeluarga()" class="px-4 py-2 font-medium text-white bg-green-500 rounded-md hover:bg-green-600">Tambah Anggota Keluarga</button>
+                    <button type="button" onclick="tambahAnggotaKeluarga()" class="px-4 py-2 font-medium text-white rounded-md bg-custom-green hover:bg-green-800">Tambah Anggota Keluarga</button>
                 </div>
             </div>
 
