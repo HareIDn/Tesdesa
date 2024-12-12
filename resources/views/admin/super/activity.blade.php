@@ -61,107 +61,93 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const loadingIndicator = document.getElementById('loading');
-    const tableBody = document.getElementById('activities-table');
+            const loadingIndicator = document.getElementById('loading');
+            const tableBody = document.getElementById('activities-table');
 
-    loadingIndicator.style.display = 'block'; // Tampilkan loading
+            // Tampilkan indikator loading saat data sedang diambil
+            loadingIndicator.style.display = 'block';
 
-    // Menggunakan fetch untuk mengambil data
-    fetch('http://tesdesa.test/api/super/submission', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer {{ auth()->user()->api_token }}` // Token autentikasi, sesuaikan dengan kebutuhan
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json(); // Parsing response menjadi JSON
-    })
-    .then(data => {
-        loadingIndicator.style.display = 'none'; // Sembunyikan loading setelah data diambil
+            // Fetch data pengajuan
+            fetch('http://tesdesa.test/api/super/submission', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer {{ auth()->user()->api_token }}` // Sesuaikan jika diperlukan
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); // Parsing JSON
+            })
+            .then(async data => {
+                loadingIndicator.style.display = 'none'; // Sembunyikan loading
+                const submissions = Array.isArray(data.data) ? data.data : [];
 
-        const activities = Array.isArray(data.data) ? data.data : []; // Pastikan `activities` adalah array
+                // Jika data kosong, tampilkan pesan
+                if (submissions.length === 0) {
+                    tableBody.innerHTML = `<tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data aktivitas.</td>
+                    </tr>`;
+                    return;
+                }
 
-        tableBody.innerHTML = ''; // Hapus konten tabel sebelumnya
+                // Untuk mendapatkan nama pengguna berdasarkan user_id
+                const userPromises = submissions.map(submission =>
+                    fetch(`http://tesdesa.test/api/super/users/${submission.user_id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer {{ auth()->user()->api_token }}`
+                        }
+                    }).then(res => res.json())
+                );
 
-        if (activities.length === 0) {
-            // Jika tidak ada data
-            const emptyRow = document.createElement('tr');
-            emptyRow.innerHTML = `
-                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data aktivitas.</td>
-            `;
-            tableBody.appendChild(emptyRow);
-            return;
-        }
+                const userData = await Promise.all(userPromises); // Menunggu semua data pengguna
+                const users = userData.map(user => user.data); // Ekstraksi data pengguna dari respons
 
-        // Iterasi data aktivitas
-        activities.forEach(activity => {
-            const row = document.createElement('tr');
-            row.classList.add('hover:bg-gray-50');
+                // Modifikasi data sebelum ditampilkan
+                const rows = submissions.map((submission, index) => {
+                    const user = users.find(u => u.id === submission.user_id); // Cari pengguna berdasarkan user_id
+                    const userName = user ? user.nama_lengkap : 'Tidak tersedia';
+                    const documentType = submission.pilih_tujuan || 'Tidak tersedia';
+                    const status = submission.status || 'Tidak tersedia';
+                    const date = status === 'diproses'
+                        ? new Date(submission.tanggal_diproses).toLocaleDateString()
+                        : new Date(submission.tanggal_pengajuan).toLocaleDateString();
+                    const time = status === 'diproses'
+                        ? new Date(submission.tanggal_diproses).toLocaleTimeString()
+                        : new Date(submission.tanggal_pengajuan).toLocaleTimeString();
 
-            // Kolom User
-            const userCell = document.createElement('td');
-            userCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
-            userCell.textContent = activity.user?.nama_lengkap || 'Tidak tersedia'; // Handle jika user atau nama_lengkap tidak tersedia
-            row.appendChild(userCell);
+                    return `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-900">${userName}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${documentType}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    ${status === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                                    ${status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${date}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${time}</td>
+                        </tr>`;
+                });
 
-            // Kolom Document
-            const documentCell = document.createElement('td');
-            documentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-            documentCell.textContent = activity.document || 'Tidak tersedia'; // Handle jika document tidak tersedia
-            row.appendChild(documentCell);
-
-            // Kolom Status
-            const statusCell = document.createElement('td');
-            statusCell.classList.add('px-6', 'py-4');
-            const statusSpan = document.createElement('span');
-
-            const statusClasses = activity.status === 'Selesai'
-                ? ['bg-green-100', 'text-green-800']
-                : ['bg-blue-100', 'text-blue-800'];
-
-            statusSpan.classList.add(
-                'px-3', 'py-1', 'inline-flex', 'text-xs', 'leading-5', 'font-semibold', 'rounded-full',
-                ...statusClasses // Tambahkan kelas menggunakan spread operator
-            );
-            statusSpan.textContent = activity.status || 'Tidak tersedia'; // Handle jika status tidak tersedia
-            statusCell.appendChild(statusSpan);
-            row.appendChild(statusCell);
-
-            // Kolom Date
-            const dateCell = document.createElement('td');
-            dateCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-            dateCell.textContent = activity.date || 'Tidak tersedia'; // Handle jika date tidak tersedia
-            row.appendChild(dateCell);
-
-            // Kolom Time
-            const timeCell = document.createElement('td');
-            timeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-500');
-            timeCell.textContent = activity.time || 'Tidak tersedia'; // Handle jika time tidak tersedia
-            row.appendChild(timeCell);
-
-            // Tambahkan baris ke tabel
-            tableBody.appendChild(row);
+                // Tambahkan semua baris ke tabel
+                tableBody.innerHTML = rows.join('');
+            })
+            .catch(error => {
+                // Tangani error
+                loadingIndicator.style.display = 'none';
+                console.error('Error fetching submissions:', error);
+                tableBody.innerHTML = `<tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-red-500">Terjadi kesalahan saat memuat data aktivitas.</td>
+                </tr>`;
+            });
         });
-    })
-    .catch(error => {
-        // Tangani error saat pengambilan data
-        loadingIndicator.style.display = 'none';
-        alert('Terjadi kesalahan saat mengambil data aktivitas.');
-        console.error('Error:', error);
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5" class="px-6 py-4 text-center text-red-500">Terjadi kesalahan dalam memuat data aktivitas.</td>
-            </tr>
-        `;
-    });
-});
-
     </script>
-
 
 </body>
 </html>

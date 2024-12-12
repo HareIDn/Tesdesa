@@ -40,8 +40,9 @@
                 <h2 class="mb-6 text-2xl font-bold text-center text-gray-800">SURAT KETERANGAN CATATAN KEPOLISIAN</h2>
                 <p class="mb-8 text-center text-gray-600">Isi formulir dibawah ini dengan lengkap</p>
 
-                <form method="POST" action="#" class="space-y-6">
+                <form method="POST" id="form-skck" class="space-y-6">
                     @csrf
+                    <input type="hidden" id="skck" name="user_id" value="{{ auth()->user()->id }}">
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- Nama Lengkap -->
                         <div>
@@ -96,15 +97,71 @@
             </div>
         </div>
     </main>
-
     <script>
-        // Jika ada notifikasi sukses, maka akan menghilang setelah 5 detik
-        setTimeout(function () {
-            const notification = document.querySelector('.fixed');
-            if (notification) {
-                notification.style.display = 'none';
+        // Tangkap elemen form
+        document.getElementById('form-skck').addEventListener('submit', function (e) {
+            e.preventDefault(); // Mencegah pengiriman form secara default
+
+            // Ambil data dari form
+            const formData = {
+                user_id: document.getElementById('skck').value,
+                pilih_tujuan: 'SKCK', // Sesuaikan tujuan
+                jenis_pengajuan: 'Surat Keterangan Catatan Kepolisian',
+                status: 'Diproses',
+                deskripsi:'Pengajuan SKCK',
+                keterangan:'Pengajuan SKCK',
+                tanggal_pengajuan: new Date().toISOString().slice(0, 10),
+                nama: document.getElementById('nama').value.trim(),
+                nik: document.getElementById('nik').value.trim(),
+                jenis_kelamin: document.getElementById('jenis_kelamin').value.trim(),
+                ttl: document.getElementById('ttl').value.trim(),
+                agama: document.getElementById('agama').value.trim(),
+                pekerjaan: document.getElementById('pekerjaan').value.trim(),
+                alamat: document.getElementById('alamat').value.trim()
+            };
+
+            // Validasi: Pastikan semua field tidak kosong
+            let isValid = true;
+            for (const [key, value] of Object.entries(formData)) {
+                if (!value) {
+                    isValid = false;
+                    document.getElementById(key).classList.add('border-red-500'); // Tambahkan border merah
+                }
             }
-        }, 5000);
+
+            // Jika ada field yang kosong, tampilkan pesan peringatan
+            if (!isValid) {
+                alert('Mohon isi semua field yang wajib diisi.');
+                return;
+            }
+
+            // Kirim data menggunakan Fetch API jika validasi berhasil
+            fetch('http://tesdesa.test/api/user/submission/post', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData) // Konversi data ke JSON
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json(); // Parsing JSON dari respons jika berhasil
+            })
+            .then(data => {
+                // Tampilkan pesan sukses
+                alert('Pengajuan berhasil dikirim: ' + data.message);
+                window.location.href = '/civil'; // Reset form setelah submit
+            })
+            .catch(error => {
+                // Tangani error
+                console.error('Terjadi kesalahan:', error);
+                alert('Gagal mengirim pengajuan. Mohon periksa kembali data Anda.');
+            });
+        });
     </script>
 </body>
 </html>

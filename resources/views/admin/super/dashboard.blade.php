@@ -122,7 +122,7 @@
             const loadingIndicator = document.getElementById('loading');
             loadingIndicator.style.display = 'block';
 
-            fetch('http://tesdesa.test/api/super/users', {
+            fetch('http://tesdesa.test/api/role/admin', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -179,7 +179,7 @@
 
             const adminData = { username, email, password };
 
-            fetch('/api/super/admins', {
+            fetch('http://tesdesa.test/api/super/users/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,25 +199,25 @@
             });
         });
 
-        // Delete admin
-        function deleteAdmin(adminId) {
-            if (!confirm('Are you sure you want to delete this admin?')) return;
-            fetch(`/api/super/admins/${adminId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer {{ auth()->user()->api_token }}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Admin deleted successfully!');
-                fetchAdmins();
-            })
-            .catch(error => {
-                console.error('Error deleting admin:', error);
-                alert('Failed to delete admin.');
-            });
-        }
+        // // Delete admin
+        // function deleteAdmin(adminId) {
+        //     if (!confirm('Are you sure you want to delete this admin?')) return;
+        //     fetch(`/api/super/admins/${adminId}`, {
+        //         method: 'DELETE',
+        //         headers: {
+        //             'Authorization': `Bearer {{ auth()->user()->api_token }}`
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         alert('Admin deleted successfully!');
+        //         fetchAdmins();
+        //     })
+        //     .catch(error => {
+        //         console.error('Error deleting admin:', error);
+        //         alert('Failed to delete admin.');
+        //     });
+        // }
 
         // Load admin data on page load
         document.addEventListener('DOMContentLoaded', fetchAdmins);

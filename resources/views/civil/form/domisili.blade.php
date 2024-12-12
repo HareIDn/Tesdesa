@@ -138,7 +138,8 @@
                 pilih_tujuan: 'Domisili', // Sesuaikan tujuan
                 jenis_pengajuan: 'Surat Keterangan Domisili',
                 status: 'Diproses',
-                deskripsi: document.getElementById('nama').value, // Deskripsi atau nama lengkap
+                keterangan:'Pindah Domisili',
+                deskripsi: 'Pindah Domisili', // Deskripsi atau nama lengkap
                 tanggal_pengajuan: new Date().toISOString().slice(0, 10), // Tanggal hari ini dalam format YYYY-MM-DD
                 tempat: document.getElementById('tempat').value,
                 tanggal_lahir: document.getElementById('tanggal_lahir').value,
