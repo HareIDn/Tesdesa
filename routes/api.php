@@ -118,6 +118,8 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
+        Route::get('/users', [UsersController::class, 'index'])->middleware('role:user|make');
+        Route::put('/users/{user}', [UsersController::class, 'update'])->middleware('role:user|make');
         Route::get('/schedules', [JadwalController::class, 'index'])->middleware('role:user|make');
         Route::post('/schedules/post', [JadwalController::class, 'store'])->middleware('role:user|make');
         Route::get('/schedules/{id}', [JadwalController::class, 'show'])->middleware('role:user|make');

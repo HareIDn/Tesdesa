@@ -4,9 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UsersController extends Controller
 {
@@ -112,71 +115,95 @@ class UsersController extends Controller
     /**
      * Memperbarui data pengguna.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'nama_lengkap' => 'nullable|string|max:255',
-            'nik' => 'nullable|string|max:255|unique:users,nik,' . $id,
-            'email' => 'nullable|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8',
-            'tanggal_lahir' => 'nullable|date',
-            'tempat_lahir' => 'nullable|string|max:255',
-            'agama' => 'nullable|string|max:255',
-            'pekerjaan' => 'nullable|string|max:255',
-            'alamat_lengkap' => 'nullable|string',
-            'rt' => 'nullable|string',
-            'rw' => 'nullable|string',
-            'kecamatan' => 'nullable|string|max:255',
-            'kelurahan' => 'nullable|string|max:255',
-            'kabupaten' => 'nullable|string|max:255',
-        ]);
-
-        // Jika validasi gagal
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Data yang dimasukkan tidak valid',
-                'errors' => $validator->errors(),
-            ], 400);
-        }
-
         try {
-            $user = User::findOrFail($id); // Mencari pengguna berdasarkan ID
+            // Ambil pengguna berdasarkan ID
+            $user = User::findOrFail($id);
 
-            // Update data pengguna
-            $user->update($request->only([
-                'nama_lengkap',
-                'nik',
-                'email',
-                'password',
-                'tanggal_lahir',
-                'tempat_lahir',
-                'agama',
-                'pekerjaan',
-                'alamat_lengkap',
-                'rt',
-                'rw',
-                'kecamatan',
-                'kelurahan',
-                'kabupaten',
-            ]));
+            // Validasi data yang diterima
+            $validatedData = $request->validate([
+                'nama_lengkap' => 'nullable|string|max:255',
+                'nik' => 'nullable|string|max:255|unique:users,nik,' . $id,
+                'email' => 'nullable|email|unique:users,email,' . $id,
+                'password' => 'nullable|string|min:8|confirmed', // password update with confirmation
+                'tanggal_lahir' => 'nullable|date',
+                'tempat_lahir' => 'nullable|string|max:255',
+                'agama' => 'nullable|string|max:255',
+                'pekerjaan' => 'nullable|string|max:255',
+                'alamat_lengkap' => 'nullable|string',
+                'rt' => 'nullable|string',
+                'rw' => 'nullable|string',
+                'kecamatan' => 'nullable|string|max:255',
+                'kelurahan' => 'nullable|string|max:255',
+                'kabupaten' => 'nullable|string|max:255',
+            ]);
 
-            if ($request->has('password')) {
-                $user->password = Hash::make($request->password);
-                $user->save();
+            // Update hanya field yang ada di dalam request
+            if ($request->has('nama_lengkap')) {
+                $user->nama_lengkap = $validatedData['nama_lengkap'];
+            }
+            if ($request->has('nik')) {
+                $user->nik = $validatedData['nik'];
+            }
+            if ($request->has('email')) {
+                $user->email = $validatedData['email'];
+            }
+            if ($request->has('tanggal_lahir')) {
+                $user->tanggal_lahir = $validatedData['tanggal_lahir'];
+            }
+            if ($request->has('tempat_lahir')) {
+                $user->tempat_lahir = $validatedData['tempat_lahir'];
+            }
+            if ($request->has('agama')) {
+                $user->agama = $validatedData['agama'];
+            }
+            if ($request->has('pekerjaan')) {
+                $user->pekerjaan = $validatedData['pekerjaan'];
+            }
+            if ($request->has('alamat_lengkap')) {
+                $user->alamat_lengkap = $validatedData['alamat_lengkap'];
+            }
+            if ($request->has('rt')) {
+                $user->rt = $validatedData['rt'];
+            }
+            if ($request->has('rw')) {
+                $user->rw = $validatedData['rw'];
+            }
+            if ($request->has('kecamatan')) {
+                $user->kecamatan = $validatedData['kecamatan'];
+            }
+            if ($request->has('kelurahan')) {
+                $user->kelurahan = $validatedData['kelurahan'];
+            }
+            if ($request->has('kabupaten')) {
+                $user->kabupaten = $validatedData['kabupaten'];
             }
 
+            // Jika password diberikan, kita hash dan update password
+            if ($request->has('password')) {
+                $user->password = Hash::make($validatedData['password']);
+            }
+
+            // Simpan perubahan
+            $user->save();
+
+            // Mengembalikan response sukses
             return response()->json([
-                'message' => 'Pengguna berhasil diperbarui',
+                'message' => 'User updated successfully',
                 'data' => $user,
             ], 200);
+
         } catch (\Exception $e) {
+            // Jika terjadi kesalahan, kembalikan error
             return response()->json([
-                'message' => 'Terjadi kesalahan saat memperbarui pengguna',
-                'error' => $e->getMessage(),
+                'error' => true,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
+
+
 
     /**
      * Menghapus pengguna.
