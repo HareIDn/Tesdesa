@@ -59,7 +59,9 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('sktm.usage') }}" method="POST">
+        <form id="dataform">
+            @csrf
+            <input type="hidden" id="sktm_familydata" name="user_id" value="{{ auth()->user()->id }}">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label for="nama_kepala_keluarga" class="block font-medium text-gray-700">Nama Kepala Keluarga</label>
@@ -116,32 +118,138 @@
     </div>
 
     <script>
-        function tambahAnggotaKeluarga() {
-            const container = document.getElementById('anggota-keluarga-container');
-            const anggotaKeluargaCount = container.children.length + 1;
-            const newAnggota = document.createElement('div');
-            newAnggota.className = 'border border-gray-300 rounded-md p-4 mb-4';
-            newAnggota.innerHTML = `
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                        <label class="block font-medium text-gray-700">Nama Lengkap</label>
-                        <input type="text" name="anggota_nama[]" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Status Hubungan</label>
-                        <select name="anggota_hubungan[]" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                            <option value="">Pilih Status</option>
-                            <option value="Kepala Keluarga">Kepala Keluarga</option>
-                            <option value="Istri">Istri</option>
-                            <option value="Anak">Anak</option>
-                            <option value="Orang Tua">Orang Tua</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
-                </div>
-            `;
-            container.appendChild(newAnggota);
+        document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const anggotaKeluargaContainer = document.getElementById('anggota-keluarga-container');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Ambil ID pengajuan dari sessionStorage
+        const submissionId = sessionStorage.getItem('submission_id');
+        if (!submissionId) {
+            alert('ID pengajuan tidak ditemukan. Silakan kembali ke halaman sebelumnya.');
+            return;
         }
+
+        // Ambil data anggota keluarga dari form
+        const anggotaKeluarga = Array.from(anggotaKeluargaContainer.children).map((child) => {
+            const namaInput = child.querySelector('input[name="anggota_nama[]"]');
+            const hubunganSelect = child.querySelector('select[name="anggota_hubungan[]"]');
+
+            return {
+                nama: namaInput ? namaInput.value.trim() : '',
+                hubungan: hubunganSelect ? hubunganSelect.value : ''
+            };
+        });
+
+        // Debugging: cek data anggota keluarga yang diambil
+        console.log(anggotaKeluarga);
+
+        // Filter data anggota keluarga untuk Kepala Keluarga, Anak, dan Istri
+        const validRoles = ['Kepala Keluarga', 'Istri', 'Anak'];
+        const filteredKeluarga = anggotaKeluarga.filter((anggota) =>
+            validRoles.includes(anggota.hubungan)
+        );
+
+        // Validasi data anggota keluarga
+        for (let anggota of filteredKeluarga) {
+            if (!anggota.nama || !anggota.hubungan) {
+                alert('Semua field pada Kepala Keluarga, Istri, dan Anak harus diisi.');
+                return;
+            }
+        }
+
+        if (!filteredKeluarga.length) {
+            alert('Minimal satu anggota keluarga harus berupa Kepala Keluarga, Istri, atau Anak.');
+            return;
+        }
+
+        // Ambil data kepala keluarga
+        const kepalaKeluarga = {
+            nama_kepala_keluarga: document.getElementById('nama_kepala_keluarga').value.trim(),
+            nomor_kk: document.getElementById('nomor_kk').value.trim()
+        };
+
+        // Validasi data kepala keluarga
+        for (let key in kepalaKeluarga) {
+            if (!kepalaKeluarga[key]) {
+                alert(`Field ${key.replace('_', ' ')} tidak boleh kosong.`);
+                return;
+            }
+        }
+
+        // Gabungkan data
+        const formData = {
+            submission_id: submissionId,
+            user_id: document.getElementById('sktm_familydata').value,
+            pilih_tujuan: 'SKTM',
+            jenis_pengajuan: 'Surat Keterangan Tidak Mampu',
+            status: 'Diproses',
+            keterangan: 'Pembuatan Surat Keterangan Tidak Mampu',
+            deskripsi: 'Pembuatan Surat Keterangan Tidak Mampu',
+            tanggal_pengajuan: new Date().toISOString().slice(0, 10),
+            ...kepalaKeluarga,
+            anggota_keluarga: filteredKeluarga
+        };
+
+        // Kirim data ke API
+        fetch('http://tesdesa.test/api/user/submission/post', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw err;
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // alert('Data berhasil ditambahkan: ' + data.message);
+                sessionStorage.setItem('submission_id', data.data.id);
+                window.location.href = '/civil/sktm2';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Gagal menambahkan data.');
+            });
+    });
+});
+
+// Fungsi Tambah Anggota Keluarga
+function tambahAnggotaKeluarga() {
+    const container = document.getElementById('anggota-keluarga-container');
+    const newAnggota = document.createElement('div');
+    newAnggota.className = 'border border-gray-300 rounded-md p-4 mb-4';
+    newAnggota.innerHTML = `
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+                <label class="block font-medium text-gray-700">Nama Lengkap</label>
+                <input type="text" name="anggota_nama[]" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+            </div>
+            <div>
+                <label class="block font-medium text-gray-700">Status Hubungan</label>
+                <select name="anggota_hubungan[]" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Pilih Status</option>
+                    <option value="Kepala Keluarga">Kepala Keluarga</option>
+                    <option value="Istri">Istri</option>
+                    <option value="Anak">Anak</option>
+                    <option value="Orang Tua">Orang Tua</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+        </div>
+    `;
+    container.appendChild(newAnggota);
+}
+
     </script>
 </body>
 </html>

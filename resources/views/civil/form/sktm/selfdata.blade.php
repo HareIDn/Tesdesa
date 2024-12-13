@@ -183,6 +183,7 @@
                 .then(data => {
                     // Ketika request berhasil
                     // alert('Pengajuan berhasil dikirim: ' + data.message);
+                    sessionStorage.setItem('submission_id', data.data.id);
                     window.location.href = '/civil/sktm1'; // Redirect ke halaman dashboard
                 })
                 .catch(error => {

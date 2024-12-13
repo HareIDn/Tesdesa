@@ -7,8 +7,10 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Civil\DashboardController as CivilDashboardController;
 use App\Http\Controllers\Civil\DomisiliController;
 use App\Http\Controllers\Civil\IjinUsahaController;
+use App\Http\Controllers\Civil\ScheduleController;
 use App\Http\Controllers\Civil\SKCKController;
 use App\Http\Controllers\Civil\SKTMController;
+use App\Http\Controllers\Civil\TrackingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +58,8 @@ Route::get('/super/activity', [ActivityController::class, 'index'])->name('activ
 Route::post('/super/add', [SuperDashboardController::class, 'store'])->name('superadmin.store');
 
 //Civil, nanti pake yang middleware
+Route::get('/civil/tracking', [TrackingController::class, 'index'])->name('civil.tracking');
+Route::get('/civil/schedule', [ScheduleController::class, 'index'])->name('civil.schedule');
 Route::get('/civil/skck', [SKCKController::class, 'store'])->name('skck.store');
 Route::get('/civil/domisili', [DomisiliController::class, 'store'])->name('domisili.store');
 Route::get('/civil/sktm', [SKTMController::class, 'createSelfData'])->name('sktm.selfdata');

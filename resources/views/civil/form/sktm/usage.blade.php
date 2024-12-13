@@ -70,8 +70,9 @@
             </div>
 
             <!-- Form Section -->
-            <form action="#" method="POST" class="space-y-6">
+            <form>
                 @csrf
+                <input type="hidden" id="sktm_usage" name="user_id" value="{{ auth()->user()->id }}">
                 <div class="mb-6">
                     <label class="block mb-2 font-medium text-gray-700">Tujuan Pengajuan SKTM</label>
                     <select class="w-full border border-gray-300 rounded-md shadow-sm">
@@ -124,13 +125,91 @@
         </div>
     </div>
     <script>
-        // Jika ada notifikasi sukses, maka akan menghilang setelah 5 detik
-        setTimeout(function () {
-            const notification = document.querySelector('.fixed');
-            if (notification) {
-                notification.style.display = 'none';
-            }
-        }, 5000);
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const fileInput = document.getElementById('file-upload');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Ambil ID pengajuan dari sessionStorage
+                const submissionId = sessionStorage.getItem('submission_id');
+                if (!submissionId) {
+                    alert('ID pengajuan tidak ditemukan. Silakan kembali ke halaman sebelumnya.');
+                    return;
+                }
+
+                // Ambil data dari form
+                const tujuanPengajuan = document.querySelector('select').value.trim();
+                const uploadedFiles = fileInput.files;
+
+                // Validasi data form
+                if (!tujuanPengajuan) {
+                    alert('Tujuan pengajuan harus dipilih.');
+                    return;
+                }
+                if (uploadedFiles.length === 0) {
+                    alert('Minimal satu dokumen pendukung harus diunggah.');
+                    return;
+                }
+
+                // Buat FormData untuk mengirim data
+                const formData = new FormData();
+                formData.append('submission_id', submissionId); // Tambahkan ID pengajuan
+                formData.append('user_id', document.getElementById('sktm_usage').value);
+                formData.append('pilih_tujuan', 'SKTM'); // Pilihan tujuan tetap 'SKTM'
+                formData.append('jenis_pengajuan', 'Surat Keterangan Tidak Mampu');
+                formData.append('status', 'Diproses');
+                formData.append('keterangan', 'Pembuatan Surat Keterangan Tidak Mampu');
+                formData.append('deskripsi', 'Pembuatan Surat Keterangan Tidak Mampu');
+                formData.append('tanggal_pengajuan', new Date().toISOString().slice(0, 10));
+                formData.append('tujuan_pengajuan', tujuanPengajuan);
+
+                // Tambahkan file ke FormData
+                for (let i = 0; i < uploadedFiles.length; i++) {
+                    formData.append('dokumen_pendukung[]', uploadedFiles[i]);
+                }
+
+                // Kirim data ke API menggunakan metode POST
+                fetch('http://tesdesa.test/api/user/submission/post', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json' // Tidak perlu 'Content-Type' karena FormData akan otomatis diatur
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => {
+                                throw err;
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('Pengajuan berhasil diperbarui: ' + data.message);
+                        window.location.href = '/dashboard'; // Redirect ke halaman berikutnya
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal memperbarui pengajuan.');
+                    });
+            });
+
+            // Menampilkan nama file yang dipilih
+            fileInput.addEventListener('change', function (e) {
+                const fileList = Array.from(e.target.files).map(file => file.name);
+                const selectedFilesDiv = document.getElementById('selected-files');
+                if (fileList.length > 0) {
+                    selectedFilesDiv.innerHTML = '<p class="font-medium">File yang dipilih:</p>' +
+                        fileList.map(name => `<p class="mt-1">• ${name}</p>`).join('');
+                } else {
+                    selectedFilesDiv.innerHTML = '';
+                }
+            });
+        });
     </script>
+
 </body>
 </html>
