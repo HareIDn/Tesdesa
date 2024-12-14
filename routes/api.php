@@ -42,6 +42,15 @@ Route::get('/domisili/{id}', [DomisiliController::class, 'show']);
 Route::put('/domisili/{id}', [DomisiliController::class, 'update']);
 Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy']);
 
+use App\Http\Controllers\API\SkckController;
+
+Route::post('/skck', [SkckController::class, 'store']);
+Route::get('/skck', [SkckController::class, 'index']);
+Route::get('/skck/{id}', [SkckController::class, 'show']);
+Route::put('/skck/{id}', [SkckController::class, 'update']);
+Route::delete('/skck/{id}', [SkckController::class, 'destroy']);
+
+
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
 //     Route::get('/users', [UsersController::class, 'index']);
