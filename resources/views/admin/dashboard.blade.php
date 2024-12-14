@@ -1,4 +1,3 @@
-<!-- resources/views/admin.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -13,10 +12,7 @@
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <div class="hidden w-64 bg-white shadow-lg md:block">
-
             @include('components.sidebar-admin')
-
-
         </div>
 
         <!-- Main Content -->
@@ -82,87 +78,104 @@
                     </div>
                 </div>
                 <!-- Table Sections -->
+                <div id="loading" class="hidden py-4 text-center">Loading...</div>
+
                 <div id="table-pengajuan" class="table-section">
-                    <!-- Table content for Pengajuan -->
-                    @foreach($pengajuan as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ $item->status }}</td>
-                        </tr>
-                    @endforeach
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-gray-500">ID</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Nama</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content-pengajuan"></tbody>
+                    </table>
                 </div>
 
                 <div id="table-proses" class="hidden table-section">
-                    <!-- Table content for Proses -->
-                    @foreach(\$sedangDiproses as \$item)
-                        <tr>
-                            <td>{{ \$item->id }}</td>
-                            <td>{{ \$item->nama }}</td>
-                            <td>{{ \$item->status }}</td>
-                        </tr>
-                    @endforeach
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-gray-500">ID</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Nama</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content-proses"></tbody>
+                    </table>
                 </div>
 
                 <div id="table-selesai" class="hidden table-section">
-                    <!-- Table content for Selesai -->
-                    @foreach(\$selesaiDiproses as \$item)
-                        <tr>
-                            <td>{{ \$item->id }}</td>
-                            <td>{{ \$item->nama }}</td>
-                            <td>{{ \$item->status }}</td>
-                        </tr>
-                    @endforeach
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-gray-500">ID</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Nama</th>
+                                <th class="px-6 py-3 text-left text-gray-500">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content-selesai"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Mobile menu toggle: Toggle menu untuk perangkat mobile
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const sidebar = document.querySelector('.min-h-screen > div:first-child');
-
-        mobileMenuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('absolute');
-            sidebar.classList.toggle('z-50');
-            sidebar.classList.toggle('bg-white');
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('h-screen');
-        });
-
-        // Table switching functionality: Fungsi untuk berpindah antara tabel
-        const cards = {
-            'card-pengajuan': 'table-pengajuan',
-            'card-proses': 'table-proses',
-            'card-selesai': 'table-selesai'
+        const sections = {
+            'card-pengajuan': { tableId: 'content-pengajuan', status: 'pengajuan' },
+            'card-proses': { tableId: 'content-proses', status: 'diproses' },
+            'card-selesai': { tableId: 'content-selesai', status: 'selesai' }
         };
 
-        // Fungsi untuk menampilkan tabel yang dipilih dan menyembunyikan yang lain
-        function showTable(tableId) {
-            document.querySelectorAll('.table-section').forEach(table => {
-                table.classList.add('hidden');
+        function fetchData(status, tableId) {
+            document.getElementById('loading').classList.remove('hidden');
+            fetch(`http://tesdesa.test/api/super/submissions?status=${status}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer {{ auth()->user()->api_token }}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById(tableId);
+                tbody.innerHTML = '';
+
+                if (!data.data || data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-500">Tidak ada data ditemukan.</td></tr>';
+                } else {
+                    data.data.forEach(item => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="px-6 py-3">${item.id}</td>
+                                <td class="px-6 py-3">${item.nama || 'Tidak tersedia'}</td>
+                                <td class="px-6 py-3">${item.status || 'Tidak tersedia'}</td>
+                            </tr>`;
+                    });
+                }
+                document.getElementById('loading').classList.add('hidden');
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('loading').classList.add('hidden');
             });
-            document.getElementById(tableId).classList.remove('hidden');
         }
 
-        // Fungsi untuk memperbarui gaya kartu yang dipilih
-        function updateCardStyles(selectedCardId) {
-            Object.keys(cards).forEach(cardId => {
-                document.getElementById(cardId).classList.remove('bg-green-50');
-                document.getElementById(cardId).classList.add('bg-white');
+        document.addEventListener('DOMContentLoaded', () => {
+            Object.keys(sections).forEach(cardId => {
+                document.getElementById(cardId).addEventListener('click', () => {
+                    Object.values(sections).forEach(section => {
+                        document.getElementById(section.tableId).parentElement.parentElement.classList.add('hidden');
+                    });
+                    const { tableId, status } = sections[cardId];
+                    fetchData(status, tableId);
+                    document.getElementById(tableId).parentElement.parentElement.classList.remove('hidden');
+                });
             });
-            document.getElementById(selectedCardId).classList.remove('bg-white');
-            document.getElementById(selectedCardId).classList.add('bg-green-50');
-        }
 
-        // Menambahkan event listener ke kartu
-        Object.entries(cards).forEach(([cardId, tableId]) => {
-            document.getElementById(cardId).addEventListener('click', () => {
-                showTable(tableId);
-                updateCardStyles(cardId);
-            });
+            // Load default table
+            fetchData(sections['card-pengajuan'].status, sections['card-pengajuan'].tableId);
         });
     </script>
 </body>

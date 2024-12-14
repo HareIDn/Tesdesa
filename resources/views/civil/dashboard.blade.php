@@ -95,6 +95,7 @@
                                 <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">STATUS</th>
                                 <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">TANGGAL</th>
                                 <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">JAM</th>
+                                <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">AKSI</th>
                             </tr>
                         </thead>
                         <tbody id="riwayatTableBody" class="divide-y divide-gray-200">
@@ -109,7 +110,7 @@
                     const tableBody = document.getElementById('riwayatTableBody');
 
                     // Menampilkan loading sementara data diambil
-                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
 
                     // Gunakan fetch untuk mengambil data riwayat pengajuan
                     fetch('http://tesdesa.test/api/user/submission', {
@@ -135,7 +136,7 @@
                         if (!Array.isArray(data)) {
                             // Jika `data` bukan array, tampilkan pesan error di tabel
                             console.error('Error: Data is not an array');
-                            tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-red-500">Data tidak valid</td></tr>';
+                            tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-red-500">Data tidak valid</td></tr>';
                             return;
                         }
 
@@ -144,7 +145,7 @@
 
                         if (data.length === 0) {
                             // Jika tidak ada data
-                            tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Tidak ada data pengajuan</td></tr>';
+                            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada data pengajuan</td></tr>';
                             return;
                         }
 
@@ -157,6 +158,9 @@
                                 <td class="px-6 py-4">${item.status || 'Tidak tersedia'}</td>
                                 <td class="px-6 py-4">${item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleDateString() : '-'}</td>
                                 <td class="px-6 py-4">${item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleTimeString() : '-'}</td>
+                                <td class="px-6 py-4">
+                                    <button onclick="goToTracking('${item.id}')" class="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700">Lacak</button>
+                                </td>
                             `;
                             tableBody.appendChild(row);
                         });
@@ -164,9 +168,14 @@
                     .catch(error => {
                         // Menangani error dan menampilkan pesan error di tabel
                         console.error('Error fetching data:', error);
-                        tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-red-500">Terjadi kesalahan dalam memuat data.</td></tr>';
+                        tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-red-500">Terjadi kesalahan dalam memuat data.</td></tr>';
                     });
                 });
+
+                // Fungsi untuk pergi ke halaman tracking
+                function goToTracking(suratId) {
+                    window.location.href = `/civil/tracking?surat_id=${suratId}`;
+                }
             </script>
 
         </div>

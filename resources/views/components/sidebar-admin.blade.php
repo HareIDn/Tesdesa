@@ -11,7 +11,7 @@
         <div class="px-4">
             <!-- Menu Sidebar: Beranda -->
             <div class="p-4 mb-4 rounded-lg {{ request()->routeIs('admin.index') ? 'bg-green-200' : '' }}">
-                <a href="{{ route('admin.index') }}" class="font-medium text-gray-700">Beranda</a>
+                <a href="{{ route('admindashboard') }}" class="font-medium text-gray-700">Beranda</a>
             </div>
 
             <!-- Menu Sidebar: Statistik Layanan -->

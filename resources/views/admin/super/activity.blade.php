@@ -61,92 +61,78 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const loadingIndicator = document.getElementById('loading');
-            const tableBody = document.getElementById('activities-table');
+    const loadingIndicator = document.getElementById('loading');
+    const tableBody = document.getElementById('activities-table');
 
-            // Tampilkan indikator loading saat data sedang diambil
-            loadingIndicator.style.display = 'block';
+    // Tampilkan indikator loading saat data sedang diambil
+    loadingIndicator.style.display = 'block';
 
-            // Fetch data pengajuan
-            fetch('http://tesdesa.test/api/super/submission', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer {{ auth()->user()->api_token }}` // Sesuaikan jika diperlukan
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json(); // Parsing JSON
-            })
-            .then(async data => {
-                loadingIndicator.style.display = 'none'; // Sembunyikan loading
-                const submissions = Array.isArray(data.data) ? data.data : [];
+    // Fetch data pengajuan
+    fetch('http://tesdesa.test/api/super/submission/user', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer {{ auth()->user()->api_token }}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); // Parsing JSON
+    })
+    .then(data => {
+        loadingIndicator.style.display = 'none'; // Sembunyikan loading
+        const submissions = Array.isArray(data.data) ? data.data : [];
 
-                // Jika data kosong, tampilkan pesan
-                if (submissions.length === 0) {
-                    tableBody.innerHTML = `<tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data aktivitas.</td>
-                    </tr>`;
-                    return;
-                }
+        // Jika data kosong, tampilkan pesan
+        if (submissions.length === 0) {
+            tableBody.innerHTML = `<tr>
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data aktivitas.</td>
+            </tr>`;
+            return;
+        }
 
-                // Untuk mendapatkan nama pengguna berdasarkan user_id
-                const userPromises = submissions.map(submission =>
-                    fetch(`http://tesdesa.test/api/super/users/${submission.user_id}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer {{ auth()->user()->api_token }}`
-                        }
-                    }).then(res => res.json())
-                );
+        // Modifikasi data sebelum ditampilkan
+        const rows = submissions.map((submission) => {
+            const userName = submission.user?.nama_lengkap || 'Tidak tersedia';
+            const documentType = submission.pilih_tujuan || 'Tidak tersedia';
+            const status = submission.status || 'Tidak tersedia';
+            const date = status === 'Diproses'
+                ? new Date(submission.tanggal_diproses).toLocaleDateString()
+                : new Date(submission.tanggal_pengajuan).toLocaleDateString();
+            const time = status === 'Diproses'
+                ? new Date(submission.tanggal_diproses).toLocaleTimeString()
+                : new Date(submission.tanggal_pengajuan).toLocaleTimeString();
 
-                const userData = await Promise.all(userPromises); // Menunggu semua data pengguna
-                const users = userData.map(user => user.data); // Ekstraksi data pengguna dari respons
-
-                // Modifikasi data sebelum ditampilkan
-                const rows = submissions.map((submission, index) => {
-                    const user = users.find(u => u.id === submission.user_id); // Cari pengguna berdasarkan user_id
-                    const userName = user ? user.nama_lengkap : 'Tidak tersedia';
-                    const documentType = submission.pilih_tujuan || 'Tidak tersedia';
-                    const status = submission.status || 'Tidak tersedia';
-                    const date = status === 'diproses'
-                        ? new Date(submission.tanggal_diproses).toLocaleDateString()
-                        : new Date(submission.tanggal_pengajuan).toLocaleDateString();
-                    const time = status === 'diproses'
-                        ? new Date(submission.tanggal_diproses).toLocaleTimeString()
-                        : new Date(submission.tanggal_pengajuan).toLocaleTimeString();
-
-                    return `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-900">${userName}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">${documentType}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    ${status === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
-                                    ${status}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">${date}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">${time}</td>
-                        </tr>`;
-                });
-
-                // Tambahkan semua baris ke tabel
-                tableBody.innerHTML = rows.join('');
-            })
-            .catch(error => {
-                // Tangani error
-                loadingIndicator.style.display = 'none';
-                console.error('Error fetching submissions:', error);
-                tableBody.innerHTML = `<tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-red-500">Terjadi kesalahan saat memuat data aktivitas.</td>
+            return `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${userName}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${documentType}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                            ${status === 'Selesai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                            ${status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${date}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${time}</td>
                 </tr>`;
-            });
         });
+
+        // Tambahkan semua baris ke tabel
+        tableBody.innerHTML = rows.join('');
+    })
+    .catch(error => {
+        // Tangani error
+        loadingIndicator.style.display = 'none';
+        console.error('Error fetching submissions:', error);
+        tableBody.innerHTML = `<tr>
+            <td colspan="5" class="px-6 py-4 text-center text-red-500">Terjadi kesalahan saat memuat data aktivitas.</td>
+        </tr>`;
+    });
+});
+
     </script>
 
 </body>

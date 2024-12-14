@@ -69,11 +69,7 @@
                     <p class="text-sm font-semibold text-gray-800">Jumat</p>
                     <p class="text-sm text-gray-600">Jam Operasional 08:00 - 16:00 WIB</p>
                 </div>
-                <!-- Hari Sabtu -->
-                <div class="p-4 text-center transition border border-gray-300 rounded-lg cursor-pointer card hover:shadow-lg">
-                    <p class="text-sm font-semibold text-gray-800">Sabtu</p>
-                    <p class="text-sm text-gray-600">Jam Operasional 08:00 - 16:00 WIB</p>
-                </div>
+                
             </div>
 
             <!-- Confirm Button -->

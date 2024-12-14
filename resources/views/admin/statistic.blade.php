@@ -1,4 +1,3 @@
-<!-- resources/views/statistics.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -32,19 +31,19 @@
                 <div class="grid grid-cols-1 gap-4 mb-8 md:grid-cols-4">
                     <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">TOTAL PENGAJUAN</h3>
-                        <p class="mt-2 text-2xl font-bold">815</p>
+                        <p class="mt-2 text-2xl font-bold" id="totalPengajuan">Loading...</p>
                     </div>
                     <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">RATA-RATA WAKTU</h3>
-                        <p class="mt-2 text-2xl font-bold">2.5 Hari</p>
+                        <p class="mt-2 text-2xl font-bold" id="avgWaktu">Loading...</p>
                     </div>
                     <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">PALING BANYAK DIAJUKAN</h3>
-                        <p class="mt-2 text-2xl font-bold">250</p>
+                        <p class="mt-2 text-2xl font-bold" id="mostPengajuan">Loading...</p>
                     </div>
                     <div class="p-4 bg-green-50 rounded-xl">
                         <h3 class="text-sm font-medium text-gray-600">KINERJA TERBAIK</h3>
-                        <p class="mt-2 text-2xl font-bold">95%</p>
+                        <p class="mt-2 text-2xl font-bold" id="bestPerformance">Loading...</p>
                     </div>
                 </div>
 
@@ -79,59 +78,80 @@
 
         mobileMenuButton.addEventListener('click', () => {
             sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('absolute');
-            sidebar.classList.toggle('z-50');
-            sidebar.classList.toggle('bg-white');
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('h-screen');
         });
 
-        // Grafik Statistik Bulanan menggunakan data dari controller
-        const statsCtx = document.getElementById('statisticsChart').getContext('2d');
-        new Chart(statsCtx, {
-            type: 'bar',
-            data: {
-                labels: @json($monthlyData['labels']),
-                datasets: @json($monthlyData['datasets'])
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+        // Fungsi untuk mengambil data statistik bulanan dari API
+        async function fetchMonthlyStatistics() {
+            try {
+                const response = await fetch('http://tesdesa.test/api/submission', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer {{ auth()->user()->api_token }}`
                     }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+                });
+                const data = await response.json();
 
-        // Grafik Kinerja Staff menggunakan data dari controller
-        const perfCtx = document.getElementById('performanceChart').getContext('2d');
-        new Chart(perfCtx, {
-            type: 'bar',
-            data: {
-                labels: @json($staffPerformanceData['labels']),
-                datasets: @json($staffPerformanceData['datasets'])
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
+                if (data) {
+                    // Menampilkan data ke dalam chart bulanan
+                    renderChart('statisticsChart', data.labels, data.datasets, 'bar');
+
+                    // Update kartu statistik
+                    document.getElementById('totalPengajuan').innerText = data.totalPengajuan || 0;
+                    document.getElementById('avgWaktu').innerText = `${data.avgWaktu || 0} Hari`;
+                    document.getElementById('mostPengajuan').innerText = data.mostPengajuan || 'Tidak Ada';
+                }
+            } catch (error) {
+                console.error('Error fetching monthly statistics:', error);
+            }
+        }
+
+        // Fungsi untuk mengambil data kinerja staff dari API
+        async function fetchStaffPerformance() {
+            try {
+                const response = await fetch('http://tesdesa.test/api/submission', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer {{ auth()->user()->api_token }}`
                     }
+                });
+                const data = await response.json();
+
+                if (data) {
+                    // Menampilkan data ke dalam chart kinerja staff
+                    renderChart('performanceChart', data.labels, data.datasets, 'bar');
+
+                    // Update kartu kinerja terbaik
+                    document.getElementById('bestPerformance').innerText = `${data.bestPerformance || 0}%`;
+                }
+            } catch (error) {
+                console.error('Error fetching staff performance:', error);
+            }
+        }
+
+        // Fungsi untuk membuat chart
+        function renderChart(canvasId, labels, datasets, type) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: datasets
                 },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Tab switching
         const statistikBtn = document.getElementById('statistikBtn');
@@ -140,22 +160,35 @@
         const kinerjaContent = document.getElementById('kinerjaContent');
 
         statistikBtn.addEventListener('click', () => {
-            statistikBtn.classList.remove('bg-white', 'text-gray-700');
             statistikBtn.classList.add('bg-green-800', 'text-white');
-            kinerjaBtn.classList.remove('bg-green-800', 'text-white');
+            statistikBtn.classList.remove('bg-white', 'text-gray-700');
             kinerjaBtn.classList.add('bg-white', 'text-gray-700');
+            kinerjaBtn.classList.remove('bg-green-800', 'text-white');
             statistikContent.classList.remove('hidden');
             kinerjaContent.classList.add('hidden');
+
+            // Fetch statistik bulanan
+            fetchMonthlyStatistics();
         });
 
         kinerjaBtn.addEventListener('click', () => {
-            kinerjaBtn.classList.remove('bg-white', 'text-gray-700');
             kinerjaBtn.classList.add('bg-green-800', 'text-white');
-            statistikBtn.classList.remove('bg-green-800', 'text-white');
+            kinerjaBtn.classList.remove('bg-white', 'text-gray-700');
             statistikBtn.classList.add('bg-white', 'text-gray-700');
+            statistikBtn.classList.remove('bg-green-800', 'text-white');
             kinerjaContent.classList.remove('hidden');
             statistikContent.classList.add('hidden');
+
+            // Fetch kinerja staff
+            fetchStaffPerformance();
+        });
+
+        // Fetch statistik bulanan dan kinerja staff saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMonthlyStatistics();
+            fetchStaffPerformance();
         });
     </script>
+
 </body>
 </html>
