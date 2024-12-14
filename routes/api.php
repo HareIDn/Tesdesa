@@ -150,6 +150,11 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
+        Route::post('/skck', [SkckController::class, 'store'])->middleware('role:user|make');
+        Route::get('/skck', [SkckController::class, 'index'])->middleware('role:user|make');
+        Route::get('/skck/{id}', [SkckController::class, 'show'])->middleware('role:user|make');
+        Route::put('/skck/{id}', [SkckController::class, 'update'])->middleware('role:user|make');
+        Route::delete('/skck/{id}', [SkckController::class, 'destroy'])->middleware('role:user|make');
         Route::post('/domisili', [DomisiliController::class, 'store'])->middleware('role:user|make');
         Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
         Route::get('/domisili', [DomisiliController::class, 'index'])->middleware('role:user|make');
