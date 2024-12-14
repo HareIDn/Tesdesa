@@ -2,13 +2,17 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DokumenController;
+use App\Http\Controllers\API\DokumenSktmController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UsersController;
 use App\Http\Controllers\API\PengajuanController;
 use App\Http\Controllers\API\JadwalController;
 use App\Http\Controllers\API\NotifikasiController;
+use App\Http\Controllers\API\PendukungSktmController;
 use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\SKTMController;
+use App\Http\Controllers\DokumenSktmController as ControllersDokumenSktmController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -18,7 +22,18 @@ Route::get('/submission', [PengajuanController::class, 'index']);
 Route::get('/submission/admin', [PengajuanController::class, 'indexAdmin']);
 Route::get('/submission/user', [PengajuanController::class, 'indexUser']);
 Route::get('/submission/all', [PengajuanController::class, 'indexAll']);
+Route::post('/sktm', [SKTMController::class, 'store']);
+Route::get('supSktm', [PendukungSktmController::class, 'index']);
+Route::post('supSktm', [PendukungSktmController::class, 'store']);
+Route::get('supSktm/{id}', [PendukungSktmController::class, 'show']);
+Route::put('supSktm/{id}', [PendukungSktmController::class, 'update']);
+Route::delete('supSktm/{id}', [PendukungSktmController::class, 'destroy']);
+Route::get('docSktm', [DokumenSktmController::class, 'index']);
+Route::post('docSktm', [DokumenSktmController::class, 'store']);
 
+Route::post('/document/post', [DokumenController::class, 'store']);
+
+Route::post('/schedules/post', [JadwalController::class, 'store']);
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
 //     Route::get('/users', [UsersController::class, 'index']);
@@ -118,6 +133,13 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
+        Route::post('/sktm', [SKTMController::class, 'store'])->middleware('role:user|make');
+        // Route::resource('/sktm', [SKTMController::class])->middleware('role:user|make');
+        Route::get('supSktm', [PendukungSktmController::class, 'index'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::get('supSktm/{id}', [PendukungSktmController::class, 'show'])->middleware('role:user|make');
+        Route::put('supSktm/{id}', [PendukungSktmController::class, 'update'])->middleware('role:user|make');
+        Route::delete('supSktm/{id}', [PendukungSktmController::class, 'destroy'])->middleware('role:user|make');
         Route::get('/users', [UsersController::class, 'index'])->middleware('role:user|make');
         Route::put('/users/{user}', [UsersController::class, 'update'])->middleware('role:user|make');
         Route::get('/schedules', [JadwalController::class, 'index'])->middleware('role:user|make');
