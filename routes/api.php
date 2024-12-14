@@ -12,7 +12,8 @@ use App\Http\Controllers\API\NotifikasiController;
 use App\Http\Controllers\API\PendukungSktmController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\SKTMController;
-use App\Http\Controllers\DokumenSktmController as ControllersDokumenSktmController;
+use App\Http\Controllers\API\DomisiliController;
+
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -34,6 +35,13 @@ Route::post('docSktm', [DokumenSktmController::class, 'store']);
 Route::post('/document/post', [DokumenController::class, 'store']);
 
 Route::post('/schedules/post', [JadwalController::class, 'store']);
+
+Route::post('/domisili', [DomisiliController::class, 'store']); // Membuat Pengajuan dan Domisili
+Route::get('/domisili', [DomisiliController::class, 'index']); // Menampilkan Daftar Pengajuan dan Domisili
+Route::get('/domisili/{id}', [DomisiliController::class, 'show']); // Menampilkan detail Pengajuan dan Domisili berdasarkan ID
+Route::put('/domisili/{id}', [DomisiliController::class, 'update']); // Mengupdate Pengajuan dan Domisili berdasarkan ID
+Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy']); // Menghapus Pengajuan dan Domisili berdasarkan ID
+
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
 //     Route::get('/users', [UsersController::class, 'index']);
