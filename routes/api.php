@@ -36,11 +36,11 @@ Route::post('/document/post', [DokumenController::class, 'store']);
 
 Route::post('/schedules/post', [JadwalController::class, 'store']);
 
-Route::post('/domisili', [DomisiliController::class, 'store']); // Membuat Pengajuan dan Domisili
-Route::get('/domisili', [DomisiliController::class, 'index']); // Menampilkan Daftar Pengajuan dan Domisili
-Route::get('/domisili/{id}', [DomisiliController::class, 'show']); // Menampilkan detail Pengajuan dan Domisili berdasarkan ID
-Route::put('/domisili/{id}', [DomisiliController::class, 'update']); // Mengupdate Pengajuan dan Domisili berdasarkan ID
-Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy']); // Menghapus Pengajuan dan Domisili berdasarkan ID
+Route::post('/domisili', [DomisiliController::class, 'store']);
+Route::get('/domisili', [DomisiliController::class, 'index']);
+Route::get('/domisili/{id}', [DomisiliController::class, 'show']);
+Route::put('/domisili/{id}', [DomisiliController::class, 'update']);
+Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy']);
 
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
@@ -141,7 +141,18 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
-        Route::post('/sktm', [SKTMController::class, 'store'])->middleware('role:user|make');
+        Route::post('/domisili', [DomisiliController::class, 'store'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::get('/domisili', [DomisiliController::class, 'index'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::get('/domisili/{id}', [DomisiliController::class, 'show'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::put('/domisili/{id}', [DomisiliController::class, 'update'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy'])->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
+        Route::post('/sktm', [SKTMController::class, 'store'])->middleware('role:user|make')->middleware('role:user|make');
+        Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
         // Route::resource('/sktm', [SKTMController::class])->middleware('role:user|make');
         Route::get('supSktm', [PendukungSktmController::class, 'index'])->middleware('role:user|make');
         Route::post('supSktm', [PendukungSktmController::class, 'store'])->middleware('role:user|make');
