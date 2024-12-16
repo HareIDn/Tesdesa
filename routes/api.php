@@ -15,6 +15,8 @@ use App\Http\Controllers\API\SKTMController;
 use App\Http\Controllers\API\DomisiliController;
 use App\Http\Controllers\API\SkckController;
 use App\Http\Controllers\API\SupportUsahaController;
+use App\Http\Controllers\API\StatistikController;
+
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -61,6 +63,8 @@ Route::get('supusaha/{id}', [SupportUsahaController::class, 'show']);
 Route::post('supusaha', [SupportUsahaController::class, 'store']);
 Route::put('supusaha/{id}', [SupportUsahaController::class, 'update']);
 Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy']);
+
+
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
 //     Route::get('/users', [UsersController::class, 'index']);
@@ -137,6 +141,9 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
         Route::get('/document', [DokumenController::class, 'index'])->middleware('role:super_admin|manage');
         Route::post('/document/post', [DokumenController::class, 'store'])->middleware('role:super_admin|manage');
         Route::delete('/document/{id}', [DokumenController::class, 'destroy'])->middleware('role:super_admin');
+
+        Route::get('statistik', [StatistikController::class, 'getStatistik'])->middleware('role:super_admin');
+        Route::get('montrep', [StatistikController::class, 'getStatistikPerBulan'])->middleware('role:super_admin');
     });
 
     // Admin Routes
@@ -156,6 +163,8 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
         Route::get('/notification', [NotifikasiController::class, 'index'])->middleware('role:super_admin|manage');
         Route::get('/notification/{id}', [NotifikasiController::class, 'show'])->middleware('role:super_admin|manage');
         Route::put('/notification/{id}', [NotifikasiController::class, 'update'])->middleware('role:super_admin|manage');
+        Route::get('statistik', [StatistikController::class, 'getStatistik'])->middleware('role:super_admin');
+        Route::get('montrep', [StatistikController::class, 'getStatistikPerBulan'])->middleware('role:super_admin');
     });
 
     // User Routes
