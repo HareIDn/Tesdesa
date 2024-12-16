@@ -66,6 +66,7 @@ Route::put('supusaha/{id}', [SupportUsahaController::class, 'update']);
 Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy']);
 Route::get('statistik', [StatistikController::class, 'getStatistik']);
 Route::get('montrep', [StatistikController::class, 'getStatistikPerBulan']);
+Route::post('/sendEmail', [NotifikasiController::class, 'sendConfirmationEmail']);
 
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users

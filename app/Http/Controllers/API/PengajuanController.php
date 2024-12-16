@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+// use App\Mail\PengajuanConfirmationMail;
+// use App\Models\Notifikasi;
+// use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class PengajuanController extends Controller
@@ -150,6 +153,29 @@ class PengajuanController extends Controller
         try {
             // Menambahkan pengajuan baru
             $pengajuan = Pengajuan::create($request->all());
+
+            // // Ambil user yang membuat pengajuan
+            // $user = User::find($pengajuan->user_id);
+
+            // // Siapkan data untuk email
+            // $details = [
+            //     'title' => 'Pengajuan Anda Telah Diterima',
+            //     'body' => "Pengajuan Anda dengan tujuan '{$pengajuan->pilih_tujuan}' telah diterima. Terima kasih atas pengajuan Anda.",
+            //     'notifikasi' => $pengajuan->toArray(), // Data pengajuan untuk notifikasi
+            // ];
+
+            // // Kirim email ke user terkait
+            // Mail::to($user->email)->send(new PengajuanConfirmationMail($details));
+
+            // // Menyimpan notifikasi
+            // Notifikasi::create([
+            //     'pengajuan_id' => $pengajuan->id,
+            //     'judul' => 'Pengajuan Telah Diterima',
+            //     'deskripsi' => "Pengajuan Anda dengan tujuan '{$pengajuan->pilih_tujuan}' telah diterima.",
+            //     'status' => 'info',
+            // ]);
+
+            // Return response
             return response()->json([
                 'message' => 'Pengajuan berhasil ditambahkan',
                 'data' => $pengajuan

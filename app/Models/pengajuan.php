@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Mail\PengajuanConfirmationMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 
 class Pengajuan extends Model
 {
@@ -24,7 +26,7 @@ class Pengajuan extends Model
         'tanggal_diproses',
         'keterangan'
     ];
-
+  
     /**
      * The attributes that should be cast.
      *
@@ -51,4 +53,4 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(User::class);
     }
-} 
+}
