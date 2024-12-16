@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ $details['title'] }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title }}</title>
 </head>
 <body>
-    <h1>{{ $details['title'] }}</h1>
-    <p>{{ $details['body'] }}</p>
+    <h1>{{ $title }}</h1>
+    <p>{{ $body }}</p>
 
-    <h3>Detail Notifikasi:</h3>
+    <h3>Notifikasi Detail:</h3>
     <ul>
-        <li><strong>Judul:</strong> {{ $details['notifikasi']['judul'] }}</li>
-        <li><strong>Deskripsi:</strong> {{ $details['notifikasi']['deskripsi'] }}</li>
-        <li><strong>Status:</strong> {{ $details['notifikasi']['status'] }}</li>
-        <li><strong>Dibuat pada:</strong> {{ $details['notifikasi']['created_at'] }}</li>
+        <li>Judul: {{ $notifikasi['judul'] }}</li>
+        <li>Deskripsi: {{ $notifikasi['deskripsi'] }}</li>
+        <li>Status: {{ $notifikasi['status'] }}</li>
     </ul>
-
-    <p>Terima kasih!</p>
 </body>
 </html>

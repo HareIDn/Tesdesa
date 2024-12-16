@@ -78,7 +78,7 @@ class NotifikasiController extends Controller
          */
         public function sendConfirmationEmail(Request $request)
         {
-             // Validasi input pengajuan_id
+            // Validasi input pengajuan_id
             $request->validate([
                 'pengajuan_id' => 'required|exists:pengajuans,id',
             ]);
@@ -89,36 +89,66 @@ class NotifikasiController extends Controller
             // Ambil data user berdasarkan user_id dari pengajuan
             $user = User::findOrFail($pengajuan->user_id);
 
-            // Cek status pengajuan
-            if ($pengajuan->status === 'diterima') {
-                // Buat notifikasi baru
-                $notifikasi = Notifikasi::create([
-                    'pengajuan_id' => $pengajuan->id,
-                    'judul' => 'Pengajuan Telah Diterima',
-                    'deskripsi' => 'Pengajuan Anda dengan tujuan: ' . $pengajuan->pilih_tujuan,
-                    'status' => 'info',
-                ]);
+            // Tentukan pesan dan status notifikasi berdasarkan status pengajuan
+            switch ($pengajuan->status) {
+                case 'diterima':
+                    $judul = 'Pengajuan Telah Diterima';
+                    $deskripsi = 'Pengajuan Anda dengan tujuan: ' . $pengajuan->pilih_tujuan . ' telah diterima. Terima kasih atas pengajuan Anda.';
+                    $emailBody = "Pengajuan Anda dengan tujuan '{$pengajuan->pilih_tujuan}' telah diterima. Terima kasih atas pengajuan Anda.";
+                    $statusNotifikasi = 'info';
+                    break;
 
-                // Detail untuk email
-                $details = [
-                    'title' => 'Pengajuan Anda Telah Diterima',
-                    'body' => "Pengajuan Anda dengan tujuan '{$pengajuan->pilih_tujuan}' telah diterima. Terima kasih atas pengajuan Anda.",
-                    'notifikasi' => $notifikasi->toArray() // Kirim seluruh data notifikasi
-                ];
+                case 'diproses':
+                    $judul = 'Pengajuan Sedang Diproses';
+                    $deskripsi = 'Pengajuan Anda sedang dalam proses. Kami akan segera menghubungi Anda.';
+                    $emailBody = "Pengajuan Anda sedang dalam proses. Kami akan segera menghubungi Anda.";
+                    $statusNotifikasi = 'info';
+                    break;
 
-                // Kirim email ke alamat email user
-                Mail::to($user->email)->send(new PengajuanConfirmationMail($details));
+                case 'disetujui':
+                    $judul = 'Pengajuan Anda Disetujui';
+                    $deskripsi = 'Pengajuan Anda telah disetujui dan bisa segera diambil.';
+                    $emailBody = "Pengajuan Anda telah disetujui dan bisa segera diambil.";
+                    $statusNotifikasi = 'success';
+                    break;
 
-                return response()->json([
-                    'message' => 'Email berhasil dikirim ke ' . $user->email,
-                    'notifikasi' => $notifikasi,
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Status pengajuan bukan "diterima". Email tidak dikirim.',
-                ], 400);
+                case 'ditolak':
+                    $judul = 'Pengajuan Anda Ditolak';
+                    $deskripsi = 'Dokumen Anda perlu diperbaiki atau ada kekurangan. Silakan cek kembali pengajuan Anda.';
+                    $emailBody = "Dokumen Anda perlu diperbaiki atau ada kekurangan. Silakan cek kembali pengajuan Anda.";
+                    $statusNotifikasi = 'warning';
+                    break;
+
+                default:
+                    return response()->json([
+                        'message' => 'Status pengajuan tidak valid.',
+                    ], 400);
             }
+
+            // Buat notifikasi baru
+            $notifikasi = Notifikasi::create([
+                'pengajuan_id' => $pengajuan->id,
+                'judul' => $judul,
+                'deskripsi' => $deskripsi,
+                'status' => $statusNotifikasi,
+            ]);
+
+            // Detail untuk email
+            $details = [
+                'title' => $judul,
+                'body' => $emailBody,
+                'notifikasi' => $notifikasi->toArray(), // Kirim seluruh data notifikasi
+            ];
+
+            // Kirim email ke alamat email user
+            Mail::to($user->email)->send(new PengajuanConfirmationMail($details));
+
+            return response()->json([
+                'message' => 'Email berhasil dikirim ke ' . $user->email,
+                'notifikasi' => $notifikasi,
+            ], 200);
         }
+
     }
 
 
