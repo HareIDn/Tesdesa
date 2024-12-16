@@ -16,6 +16,8 @@ use App\Http\Controllers\API\DomisiliController;
 use App\Http\Controllers\API\SkckController;
 use App\Http\Controllers\API\SupportUsahaController;
 use App\Http\Controllers\API\StatistikController;
+use App\Http\Controllers\API\SuratUsahaController;
+
 
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
@@ -51,7 +53,6 @@ Route::get('/skck', [SkckController::class, 'index']);
 Route::get('/skck/{id}', [SkckController::class, 'show']);
 Route::put('/skck/{id}', [SkckController::class, 'update']);
 Route::delete('/skck/{id}', [SkckController::class, 'destroy']);
-use App\Http\Controllers\API\SuratUsahaController;
 
 Route::get('/usaha', [SuratUsahaController::class, 'index']);
 Route::post('/usaha', [SuratUsahaController::class, 'store']);
@@ -63,7 +64,8 @@ Route::get('supusaha/{id}', [SupportUsahaController::class, 'show']);
 Route::post('supusaha', [SupportUsahaController::class, 'store']);
 Route::put('supusaha/{id}', [SupportUsahaController::class, 'update']);
 Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy']);
-
+Route::get('statistik', [StatistikController::class, 'getStatistik']);
+Route::get('montrep', [StatistikController::class, 'getStatistikPerBulan']);
 
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
@@ -169,6 +171,16 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
+        Route::get('/usaha', [SuratUsahaController::class, 'index'])->middleware('role:user|make');
+        Route::post('/usaha', [SuratUsahaController::class, 'store'])->middleware('role:user|make');
+        Route::get('/usaha/{id}', [SuratUsahaController::class, 'show'])->middleware('role:user|make');
+        Route::put('/usaha/{id}', [SuratUsahaController::class, 'update'])->middleware('role:user|make');
+        Route::delete('/usaha/{id}', [SuratUsahaController::class, 'destroy'])->middleware('role:user|make');
+        Route::get('supusaha', [SupportUsahaController::class, 'index'])->middleware('role:user|make');
+        Route::get('supusaha/{id}', [SupportUsahaController::class, 'show'])->middleware('role:user|make');
+        Route::post('supusaha', [SupportUsahaController::class, 'store'])->middleware('role:user|make');
+        Route::put('supusaha/{id}', [SupportUsahaController::class, 'update'])->middleware('role:user|make');
+        Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy'])->middleware('role:user|make');
         Route::post('/skck', [SkckController::class, 'store'])->middleware('role:user|make');
         Route::get('/skck', [SkckController::class, 'index'])->middleware('role:user|make');
         Route::get('/skck/{id}', [SkckController::class, 'show'])->middleware('role:user|make');
