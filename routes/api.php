@@ -13,7 +13,8 @@ use App\Http\Controllers\API\PendukungSktmController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\SKTMController;
 use App\Http\Controllers\API\DomisiliController;
-
+use App\Http\Controllers\API\SkckController;
+use App\Http\Controllers\API\SupportUsahaController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('logins');
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -42,15 +43,24 @@ Route::get('/domisili/{id}', [DomisiliController::class, 'show']);
 Route::put('/domisili/{id}', [DomisiliController::class, 'update']);
 Route::delete('/domisili/{id}', [DomisiliController::class, 'destroy']);
 
-use App\Http\Controllers\API\SkckController;
 
 Route::post('/skck', [SkckController::class, 'store']);
 Route::get('/skck', [SkckController::class, 'index']);
 Route::get('/skck/{id}', [SkckController::class, 'show']);
 Route::put('/skck/{id}', [SkckController::class, 'update']);
 Route::delete('/skck/{id}', [SkckController::class, 'destroy']);
+use App\Http\Controllers\API\SuratUsahaController;
 
-
+Route::get('/usaha', [SuratUsahaController::class, 'index']);
+Route::post('/usaha', [SuratUsahaController::class, 'store']);
+Route::get('/usaha/{id}', [SuratUsahaController::class, 'show']);
+Route::put('/usaha/{id}', [SuratUsahaController::class, 'update']);
+Route::delete('/usaha/{id}', [SuratUsahaController::class, 'destroy']);
+Route::get('supusaha', [SupportUsahaController::class, 'index']);
+Route::get('supusaha/{id}', [SupportUsahaController::class, 'show']);
+Route::post('supusaha', [SupportUsahaController::class, 'store']);
+Route::put('supusaha/{id}', [SupportUsahaController::class, 'update']);
+Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy']);
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
 //     Route::get('/users', [UsersController::class, 'index']);
