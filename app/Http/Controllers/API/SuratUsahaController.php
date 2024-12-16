@@ -25,7 +25,7 @@ class SuratUsahaController extends Controller
             'keterangan' => 'nullable|string',
 
             'nama_lengkap' => 'required|string|max:255',
-            'nik' => 'required|numeric|unique:surat_usahas,nik',
+            'nik' => 'required',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'jabatan' => 'required|string|max:255',
