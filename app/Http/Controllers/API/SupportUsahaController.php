@@ -98,7 +98,7 @@ class SupportUsahaController extends Controller
             'jumlah_karyawan' => 'required|integer',
             'alamat_usaha' => 'required|string',
         ]);
-
+ 
         // Cari data SupportUsaha berdasarkan ID
         $supportUsaha = SupportUsaha::find($id);
 

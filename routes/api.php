@@ -171,6 +171,8 @@ Route::put('/{userId}/role', [RoleController::class, 'updateUserRole'])->middlew
 
     // User Routes
     Route::prefix('user')->middleware('can:make')->group(function() {
+        Route::get('docSktm', [DokumenSktmController::class, 'index'])->middleware('role:user|make');
+        Route::post('docSktm', [DokumenSktmController::class, 'store'])->middleware('role:user|make');
         Route::get('/usaha', [SuratUsahaController::class, 'index'])->middleware('role:user|make');
         Route::post('/usaha', [SuratUsahaController::class, 'store'])->middleware('role:user|make');
         Route::get('/usaha/{id}', [SuratUsahaController::class, 'show'])->middleware('role:user|make');

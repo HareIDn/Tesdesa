@@ -33,10 +33,10 @@ class DokumenSktmController extends Controller
 
         // Simpan data dokumen di database
         $dokumenSktm = new DokumenSktm();
-        $dokumenSktm->dokumen_pendukung = $filePath; // Menyimpan path file
         $dokumenSktm->sktm_id = $request->input('sktm_id'); // Misal ini adalah ID SKTM terkait
         $dokumenSktm->pilih_tujuan = $request->input('pilih_tujuan');
         $dokumenSktm->keterangan = $request->input('keterangan');
+        $dokumenSktm->dokumen_pendukung = $filePath; // Menyimpan path file
         $dokumenSktm->save();
 
         // Kembalikan respons dengan URL file yang sudah di-upload
@@ -45,6 +45,26 @@ class DokumenSktmController extends Controller
             'dokumen_url' => Storage::url($dokumenSktm->dokumen_pendukung),
         ], 200);
     }
+
+    /**
+     * Menampilkan daftar dokumen SKTM.
+     */
+    public function index()
+    {
+        // Ambil semua dokumen SKTM dari database
+        $dokumenSktms = DokumenSktm::all();
+
+        // Jika tidak ada data, return message
+        if ($dokumenSktms->isEmpty()) {
+            return response()->json([
+                'message' => 'Tidak ada dokumen SKTM ditemukan.',
+            ], 404);
+        }
+
+        // Return data dokumen SKTM
+        return response()->json([
+            'message' => 'Daftar dokumen SKTM',
+            'data' => $dokumenSktms,
+        ], 200);
+    }
 }
-
-
