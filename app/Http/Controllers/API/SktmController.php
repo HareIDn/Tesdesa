@@ -24,9 +24,8 @@ class SktmController extends Controller
             'tanggal_pengajuan' => 'nullable|date',
             'tanggal_diproses' => 'nullable|date',
             'keterangan' => 'nullable|string',
-
             'nama_lengkap' => 'required|string|max:255',
-            'nik' => 'required|numeric|unique:sktms,nik',
+            'nik' => 'required|numeric',
             'tempat' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|string|max:10',
@@ -52,7 +51,6 @@ class SktmController extends Controller
         $pengajuan->tanggal_diproses = $request->tanggal_diproses;
         $pengajuan->keterangan = $request->keterangan;
         $pengajuan->save();
-
         // Menyimpan data Sktm yang terkait dengan Pengajuan yang baru dibuat
         $sktm = new Sktm();
         $sktm->pengajuan_id = $pengajuan->id;

@@ -16,6 +16,7 @@ use App\Http\Controllers\API\DomisiliController;
 use App\Http\Controllers\API\SkckController;
 use App\Http\Controllers\API\SupportUsahaController;
 use App\Http\Controllers\API\StatistikController;
+use App\Http\Controllers\API\SubsktmController;
 use App\Http\Controllers\API\SuratUsahaController;
 
 
@@ -67,6 +68,7 @@ Route::delete('supusaha/{id}', [SupportUsahaController::class, 'destroy']);
 Route::get('statistik', [StatistikController::class, 'getStatistik']);
 Route::get('montrep', [StatistikController::class, 'getStatistikPerBulan']);
 Route::post('/sendEmail', [NotifikasiController::class, 'sendConfirmationEmail']);
+Route::apiResource('subsktms', SubsktmController::class);
 
 // Route::prefix('nr')->group(function(){
 //         // Routes untuk Users
